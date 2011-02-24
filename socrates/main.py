@@ -39,7 +39,7 @@ class Generator(object):
         for post in self.posts:
             # Get categories
             self._get_post_cats(post)
-
+        self.context = dict(self.context, **{'categories': self.categories})
 
         # Prepare post dirs
         self.years = {}
@@ -47,6 +47,7 @@ class Generator(object):
             date = post.config['date']
             if date.year not in self.years:
                 self.years[str(date.year)] = []
+        self.context = dict(self.context, **{'years': self.years})
 
         for post in self.posts:
             date = post.config['date']
