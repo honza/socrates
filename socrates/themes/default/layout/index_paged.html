@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <h2>Page {{ page }}</h2>
+
+    {% for post in posts %}
+        <p>{{ post.title }}</p>
+    {% endfor %}
+
+    <p>Total {{ total }}</p>
+    <p>Page {{ page }}</p>
+    <p>Prev {{ prev }}</p>
+    <p>Next {{ next }}</p>
+
+
+{% endblock %}
