@@ -20,7 +20,7 @@ class Generator(object):
         self.ARCHIVE = 'archive.html'
         self.PAGED = 'index_paged.html'
 
-        self.SETTINGS = self._get_settings()
+        self.context = self._get_settings()
 
         # django boiler plate
         x = (os.path.join(self.PROJECT_ROOT, 'layout'),)
@@ -74,23 +74,24 @@ class Generator(object):
             b = b + '.html'
             m = os.path.join(self.DEPLOY_DIR, post.year, post.month, b)
 
-            content = render_to_string(self.SINGLE, post.vals())
+            content = render_to_string(self.SINGLE, self._v(post.vals()))
             self._write_to_file(m, content)
 
         # Index file
         m = os.path.join(self.DEPLOY_DIR, 'index.html')
-        if len(self.posts) > self.SETTINGS['posts_per_page']:
+        if len(self.posts) > self.context['posts_per_page']:
             # Cut off unnecessary posts
             n = len(self.posts)
-            n - self.SETTINGS['posts_per_page']
-            posts = self.posts[n:]
+            n = self.context['posts_per_page']
+            posts = self.posts[:n]
             extra = True
         else:
             posts = self.posts
             extra = False
-        contents = render_to_string(self.INDEX, {'posts': posts, 'extra':
-            extra})
+        contents = render_to_string(self.INDEX, self._v({'posts': posts, 'extra':
+            extra}))
         self._write_to_file(m, contents)
+        print '-'*20
 
         # Save category pages
         keys = self.categories.keys()
@@ -104,8 +105,8 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.categories[k]
-                contents = render_to_string(self.CATEGORY, {'category': k, 'posts':
-                    posts})
+                contents = render_to_string(self.CATEGORY, self._v({'category': k, 'posts':
+                    posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
@@ -128,13 +129,13 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.archives[k]
-                contents = render_to_string(self.ARCHIVE, {'year': k, 'posts':
-                    posts})
+                contents = render_to_string(self.ARCHIVE, self._v({'year': k, 'posts':
+                    posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
         num = len(self.posts)
-        per = int(self.SETTINGS['posts_per_page'])
+        per = int(self.context['posts_per_page'])
         pages = num/per
 
         m = os.path.join(self.DEPLOY_DIR, 'page')
@@ -168,7 +169,7 @@ class Generator(object):
             if not os.path.exists(e):
                 os.mkdir(e)
 
-            contents = render_to_string(self.PAGED, v)
+            contents = render_to_string(self.PAGED, self._v(v))
             c = os.path.join(e, "index.html")
             self._write_to_file(c, contents)
             
@@ -210,6 +211,11 @@ class Generator(object):
         f = open(path, 'w')
         f.write(contents)
         f.close()
+
+    def _v(self, vals):
+        x = dict(self.context, **vals)
+        print x
+        return x
 
 def main():
     Generator()
