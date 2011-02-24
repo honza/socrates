@@ -33,7 +33,7 @@ class Generator(object):
         for filename in os.listdir(self.POSTS_DIR):
             if filename.endswith('.md'):
                 p = os.path.join(self.POSTS_DIR, filename)
-                self.posts.append(File(p))
+                self.posts.append(File(p, self.context))
 
         self.posts.reverse()
         for post in self.posts:
@@ -72,7 +72,7 @@ class Generator(object):
             b = post.slug + '.html'
             m = os.path.join(self.DEPLOY_DIR, post.year, post.month, b)
 
-            content = render_to_string(self.SINGLE, self._v(post.vals()))
+            content = render_to_string(self.SINGLE, self._v({'post': post}))
             self._write_to_file(m, content)
 
         # Index file

@@ -6,15 +6,25 @@ from django.template.defaultfilters import slugify
 
 class File(object):
 
-    def __init__(self, path):
+    def __init__(self, path, context):
+        self.context = context # site wide config
         self.path = path
+
         self.filename = os.path.basename(path)
         self.contents, self.config = self.get_contents()
+
         self.year = str(self.config['date'].year)
         self.month = self.config['date'].strftime("%m")
+        self.date = self.config['date'].strftime(self.context['date_format'])
+
         self.slug = slugify(self.config['title'])
         self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
         self.title = self.config['title']
+        self.categories = self.config['categories']
+        if 'author' not in self.config:
+            self.author = self.context['author']
+        else:
+            self.author = self.config['author']
 
     def vals(self):
         """

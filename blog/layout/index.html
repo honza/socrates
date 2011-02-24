@@ -4,7 +4,18 @@
     {% for post in posts %}
         <div class="post">
             <h3><a href="/{{ post.url }}">{{ post.config.title }}</a></h3>
-            {{ post.filename }}
+            <small>
+                {{ post.date }}
+                - Posted under:
+                {% for c in post.categories %}
+                    {% if not forloop.last %}
+                        {{ c }},
+                    {% else %}
+                        {{ c }}
+                    {% endif %}
+                {% endfor %}
+            </small>
+            {{ post.contents|truncatewords_html:30|safe }}
         </div>
     {% endfor %}
 {% endblock %}

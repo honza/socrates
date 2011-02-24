@@ -3,5 +3,18 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main %}
-{{ content|safe }}
+    <a href="/">&laquo; home</a>
+    <div class="post">
+        <div class="post-meta">
+            <span class="date">{{ post.date }}</span> - Posted by {{ post.author }}
+        </div>
+        <div class="post-content">
+            {{ post.contents|safe }}
+        </div>
+        <div class="post-after">
+            {% for c in post.categories %}
+            <a href="/category/{{ c|slugify }}/">{{ c }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
