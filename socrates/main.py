@@ -69,9 +69,7 @@ class Generator(object):
 
         # Save posts
         for post in self.posts:
-            b = os.path.basename(post.filename)
-            b = b[:len(b)-3]
-            b = b + '.html'
+            b = post.slug + '.html'
             m = os.path.join(self.DEPLOY_DIR, post.year, post.month, b)
 
             content = render_to_string(self.SINGLE, self._v(post.vals()))
