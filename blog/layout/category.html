@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h2>Viewing posts filed under "{{ category }}".</h2>
+
+{% for post in posts %}
+    <p>{{ post.title }}</p>
+{% endfor %}
+
+{% endblock %}
