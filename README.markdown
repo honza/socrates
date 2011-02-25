@@ -32,7 +32,7 @@ file.
 
 When you are ready to generate your site, you run:
 
-    python socrates.py -i blog
+    python socrates.py -g blog
 
 This will place all the generated files in `blog/deploy`. You can then take
 that directory and upload it to your server.
