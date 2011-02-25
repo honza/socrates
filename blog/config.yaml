@@ -3,3 +3,4 @@ author: Honza Pokorny
 posts_per_page: 5
 url: http://honza.ca
 date_format: "%B %d, %Y"
+text_processor: markdown

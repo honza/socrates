@@ -4,7 +4,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option('-i', '--init', action='store', help='Some help')
-parser.add_option('-g', '--generate', action='store_true', help='Some help')
+parser.add_option('-g', '--generate', action='store', help='Some help')
 parser.add_option('-r', '--run', action='store_true', help='Some help')
 
 options, args = parser.parse_args()
@@ -17,7 +17,7 @@ if options.init:
         print "The '%s' directory already exists." % options.init
 
 if options.generate:
-    main()
+    main(options.generate)
 
 if options.run:
     import SimpleHTTPServer

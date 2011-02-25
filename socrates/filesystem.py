@@ -4,9 +4,24 @@ from libs.markdown import markdown
 from django.template.defaultfilters import slugify
 
 
-class File(object):
+class Post(object):
+    """
+    Post object. Exposes the following attributes:
+        - filename (e.g. 2010-cool-post.md)
+        - path (e.g. /home/user/2010-cool-post.md)
+        - contents (post content)
+        - config (post front config)
+        - year, month, date (in the format specified in config.yaml)
+        - title
+        - url (e.g. /2010/02/cool-post/)
+        - categories (list)
+        - author (from config.yaml or from front config)
+
+    All attributes are calculated on init.
+    """
 
     def __init__(self, path, context):
+
         self.context = context # site wide config
         self.path = path
 
@@ -25,13 +40,6 @@ class File(object):
             self.author = self.context['author']
         else:
             self.author = self.config['author']
-
-    def vals(self):
-        """
-        Return django template values
-        """
-        self.config['content'] = self.contents
-        return self.config
 
     def get_contents(self):
         """
@@ -58,5 +66,11 @@ class File(object):
                 c += x
         f.close()
 
-        c = markdown(c)
-        return c, yaml.load(conf)
+        config = yaml.load(conf)
+        try:
+            pr = self.context['text_processor']
+            if pr == 'markdown':
+                c = markdown(c)
+        except KeyError:
+            pass
+        return c, config

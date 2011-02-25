@@ -1,16 +1,19 @@
 import os
 import yaml
-from filesystem import File
+from filesystem import Post
 from django.conf import settings
 from django.template.defaultfilters import slugify
 
 
 class Generator(object):
 
-    def __init__(self):
+    def __init__(self, directory):
         m = os.path.dirname(os.path.dirname(__file__))
 
-        self.PROJECT_ROOT = os.path.join(m, 'blog')
+        self.PROJECT_ROOT = os.path.join(m, directory)
+        if not os.path.exists(self.PROJECT_ROOT):
+            print "The '%s' directory doesn't exist." % directory
+            return
         self.DEPLOY_DIR = os.path.join(self.PROJECT_ROOT, 'deploy')
         self.POSTS_DIR = os.path.join(self.PROJECT_ROOT, 'posts')
         # Templates
@@ -33,7 +36,7 @@ class Generator(object):
         for filename in os.listdir(self.POSTS_DIR):
             if filename.endswith('.md'):
                 p = os.path.join(self.POSTS_DIR, filename)
-                self.posts.append(File(p, self.context))
+                self.posts.append(Post(p, self.context))
 
         self.posts.reverse()
         for post in self.posts:
@@ -90,7 +93,6 @@ class Generator(object):
         contents = render_to_string(self.INDEX, self._v({'posts': posts, 'extra':
             extra}))
         self._write_to_file(m, contents)
-        print '-'*20
 
         # Save category pages
         keys = self.categories.keys()
@@ -176,6 +178,8 @@ class Generator(object):
         for p in self.posts:
             print p.filename
 
+        print "Success!"
+
     def _get_page_str(self, current, total):
         current += 1
         if total < 10:
@@ -212,9 +216,7 @@ class Generator(object):
         f.close()
 
     def _v(self, vals):
-        x = dict(self.context, **vals)
-        print x
-        return x
+        return dict(self.context, **vals)
 
-def main():
-    Generator()
+def main(directory):
+    Generator(directory)
