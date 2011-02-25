@@ -1,4 +1,5 @@
 import os
+import shutil
 import yaml
 from filesystem import Post
 from django.conf import settings
@@ -15,6 +16,13 @@ class Generator(object):
             print "The '%s' directory doesn't exist." % directory
             return
         self.DEPLOY_DIR = os.path.join(self.PROJECT_ROOT, 'deploy')
+        if not os.path.exists(self.DEPLOY_DIR):
+            os.mkdir(self.DEPLOY_DIR)
+        if os.path.exists(os.path.join(self.DEPLOY_DIR, 'media')):
+            shutil.rmtree(os.path.join(self.DEPLOY_DIR, 'media'))
+        shutil.copytree(os.path.join(self.PROJECT_ROOT, 'layout', 'media'),
+                os.path.join(self.DEPLOY_DIR, 'media'))
+
         self.POSTS_DIR = os.path.join(self.PROJECT_ROOT, 'posts')
         # Templates
         self.SINGLE = 'single.html'
