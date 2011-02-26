@@ -8,49 +8,58 @@ from django.template.defaultfilters import slugify
 
 class Generator(object):
 
+    # Templates
+    SINGLE = 'single.html'
+    INDEX = 'index.html'
+    CATEGORY = 'category.html'
+    ARCHIVE = 'archive.html'
+    PAGED = 'index_paged.html'
+
+    # Directories
+    ROOT = None
+    DEPLOY = None
+    POSTS = None
+
+    # Global, site-wide settings
+    SETTINGS = None
+
+
     def __init__(self, directory):
         m = os.path.dirname(os.path.dirname(__file__))
+        self.ROOT = os.path.join(m, directory)
 
-        self.PROJECT_ROOT = os.path.join(m, directory)
-        if not os.path.exists(self.PROJECT_ROOT):
+        if not os.path.exists(self.ROOT):
             print "The '%s' directory doesn't exist." % directory
             return
-        self.DEPLOY_DIR = os.path.join(self.PROJECT_ROOT, 'deploy')
-        if not os.path.exists(self.DEPLOY_DIR):
-            os.mkdir(self.DEPLOY_DIR)
-        if os.path.exists(os.path.join(self.DEPLOY_DIR, 'media')):
-            shutil.rmtree(os.path.join(self.DEPLOY_DIR, 'media'))
-        shutil.copytree(os.path.join(self.PROJECT_ROOT, 'layout', 'media'),
-                os.path.join(self.DEPLOY_DIR, 'media'))
+        self.DEPLOY = os.path.join(self.ROOT, 'deploy')
+        if not os.path.exists(self.DEPLOY):
+            os.mkdir(self.DEPLOY)
+        if os.path.exists(os.path.join(self.DEPLOY, 'media')):
+            shutil.rmtree(os.path.join(self.DEPLOY, 'media'))
+        shutil.copytree(os.path.join(self.ROOT, 'layout', 'media'),
+                os.path.join(self.DEPLOY, 'media'))
 
-        self.POSTS_DIR = os.path.join(self.PROJECT_ROOT, 'posts')
-        # Templates
-        self.SINGLE = 'single.html'
-        self.INDEX = 'index.html'
-        self.CATEGORY = 'category.html'
-        self.ARCHIVE = 'archive.html'
-        self.PAGED = 'index_paged.html'
-
-        self.context = self._get_settings()
+        self.POSTS = os.path.join(self.ROOT, 'posts')
+        self.SETTINGS = self._get_settings()
 
         # django boiler plate
-        x = (os.path.join(self.PROJECT_ROOT, 'layout'),)
+        x = (os.path.join(self.ROOT, 'layout'),)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=x)
         from django.template.loader import render_to_string
 
         self.posts = []
         self.categories = {}
 
-        for filename in os.listdir(self.POSTS_DIR):
+        for filename in os.listdir(self.POSTS):
             if filename.endswith('.md'):
-                p = os.path.join(self.POSTS_DIR, filename)
-                self.posts.append(Post(p, self.context))
+                p = os.path.join(self.POSTS, filename)
+                self.posts.append(Post(p, self.SETTINGS))
 
         self.posts.reverse()
         for post in self.posts:
             # Get categories
             self._get_post_cats(post)
-        self.context = dict(self.context, **{'categories': self.categories})
+        self.SETTINGS = dict(self.SETTINGS, **{'categories': self.categories})
 
         # Prepare post dirs
         self.years = {}
@@ -58,7 +67,7 @@ class Generator(object):
             date = post.config['date']
             if date.year not in self.years:
                 self.years[str(date.year)] = []
-        self.context = dict(self.context, **{'years': self.years})
+        self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
 
         for post in self.posts:
             date = post.config['date']
@@ -70,29 +79,29 @@ class Generator(object):
         # Make dirs
         keys = self.years.keys()
         for k in keys:
-            m = os.path.join(self.DEPLOY_DIR, k)
+            m = os.path.join(self.DEPLOY, k)
             if not os.path.exists(m):
                 os.mkdir(m)
             months = self.years[k]
             for month in months:
-                m = os.path.join(self.DEPLOY_DIR, k, month)
+                m = os.path.join(self.DEPLOY, k, month)
                 if not os.path.exists(m):
                     os.mkdir(m)
 
         # Save posts
         for post in self.posts:
             b = post.slug + '.html'
-            m = os.path.join(self.DEPLOY_DIR, post.year, post.month, b)
+            m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
             content = render_to_string(self.SINGLE, self._v({'post': post}))
             self._write_to_file(m, content)
 
         # Index file
-        m = os.path.join(self.DEPLOY_DIR, 'index.html')
-        if len(self.posts) > self.context['posts_per_page']:
+        m = os.path.join(self.DEPLOY, 'index.html')
+        if len(self.posts) > self.SETTINGS['posts_per_page']:
             # Cut off unnecessary posts
             n = len(self.posts)
-            n = self.context['posts_per_page']
+            n = self.SETTINGS['posts_per_page']
             posts = self.posts[:n]
             extra = True
         else:
@@ -106,7 +115,7 @@ class Generator(object):
         keys = self.categories.keys()
         if len(keys) != 0:
             # Make category dir
-            self.CATEGORIES = os.path.join(self.DEPLOY_DIR, 'category')
+            self.CATEGORIES = os.path.join(self.DEPLOY, 'category')
             if not os.path.exists(self.CATEGORIES):
                 os.mkdir(self.CATEGORIES)
             for k in keys:
@@ -130,7 +139,7 @@ class Generator(object):
         keys = self.archives.keys()
         if len(keys) != 0:
             # Make category dir
-            self.ARCHIVES = os.path.join(self.DEPLOY_DIR, 'archive')
+            self.ARCHIVES = os.path.join(self.DEPLOY, 'archive')
             if not os.path.exists(self.ARCHIVES):
                 os.mkdir(self.ARCHIVES)
             for k in keys:
@@ -144,10 +153,10 @@ class Generator(object):
                 self._write_to_file(m, contents)
 
         num = len(self.posts)
-        per = int(self.context['posts_per_page'])
+        per = int(self.SETTINGS['posts_per_page'])
         pages = num/per
 
-        m = os.path.join(self.DEPLOY_DIR, 'page')
+        m = os.path.join(self.DEPLOY, 'page')
         if not os.path.exists(m):
             os.mkdir(m)
         for x in range(1, pages + 1):
@@ -207,7 +216,7 @@ class Generator(object):
                 self.categories[c].append(post)
 
     def _get_settings(self):
-        s = os.path.join(self.PROJECT_ROOT, 'config.yaml')
+        s = os.path.join(self.ROOT, 'config.yaml')
         if not os.path.exists(s):
             raise Exception('No config file.')
         f = open(s, 'r')
@@ -224,7 +233,7 @@ class Generator(object):
         f.close()
 
     def _v(self, vals):
-        return dict(self.context, **vals)
+        return dict(self.SETTINGS, **vals)
 
 def main(directory):
     Generator(directory)
