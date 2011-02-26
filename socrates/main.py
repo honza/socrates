@@ -46,70 +46,19 @@ class Generator(object):
         x = (os.path.join(self.ROOT, 'layout'),)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=x)
         from django.template.loader import render_to_string
+        self.render = render_to_string
 
         self.posts = []
         self.categories = {}
-
-        for filename in os.listdir(self.POSTS):
-            if filename.endswith('.md'):
-                p = os.path.join(self.POSTS, filename)
-                self.posts.append(Post(p, self.SETTINGS))
-
-        self.posts.reverse()
-        for post in self.posts:
-            # Get categories
-            self._get_post_cats(post)
-        self.SETTINGS = dict(self.SETTINGS, **{'categories': self.categories})
-
-        # Prepare post dirs
         self.years = {}
-        for post in self.posts:
-            date = post.config['date']
-            if date.year not in self.years:
-                self.years[str(date.year)] = []
+
+        self.load_posts()
+        self.process_posts()
+
+        self.SETTINGS = dict(self.SETTINGS, **{'categories': self.categories})
         self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
 
-        for post in self.posts:
-            date = post.config['date']
-            m = date.strftime("%m")
-            y = self.years[str(date.year)]
-            if m not in y:
-                self.years[str(date.year)].append(m)
-
-        # Make dirs
-        keys = self.years.keys()
-        for k in keys:
-            m = os.path.join(self.DEPLOY, k)
-            if not os.path.exists(m):
-                os.mkdir(m)
-            months = self.years[k]
-            for month in months:
-                m = os.path.join(self.DEPLOY, k, month)
-                if not os.path.exists(m):
-                    os.mkdir(m)
-
-        # Save posts
-        for post in self.posts:
-            b = post.slug + '.html'
-            m = os.path.join(self.DEPLOY, post.year, post.month, b)
-
-            content = render_to_string(self.SINGLE, self._v({'post': post}))
-            self._write_to_file(m, content)
-
-        # Index file
-        m = os.path.join(self.DEPLOY, 'index.html')
-        if len(self.posts) > self.SETTINGS['posts_per_page']:
-            # Cut off unnecessary posts
-            n = len(self.posts)
-            n = self.SETTINGS['posts_per_page']
-            posts = self.posts[:n]
-            extra = True
-        else:
-            posts = self.posts
-            extra = False
-        contents = render_to_string(self.INDEX, self._v({'posts': posts, 'extra':
-            extra}))
-        self._write_to_file(m, contents)
+        self.make_index_page()
 
         # Save category pages
         keys = self.categories.keys()
@@ -234,6 +183,88 @@ class Generator(object):
 
     def _v(self, vals):
         return dict(self.SETTINGS, **vals)
+
+    def load_posts(self):
+        """
+        Get all files from the posts directory, create Post instances and add
+        them to the self.posts list.
+        """
+        # TODO: Allow different file extensions
+        for filename in os.listdir(self.POSTS):
+            if filename.endswith('.md'):
+                p = os.path.join(self.POSTS, filename)
+                self.posts.append(Post(p, self.SETTINGS))
+        self.posts.reverse()
+
+    def process_posts(self):
+        """
+        Collect all the necessary information about posts.
+        """
+        print 'Processing posts...'
+        self.make_post_directories()
+        for post in self.posts:
+            # Get categories
+            self._get_post_cats(post)
+            # Post dirs
+            #   years
+            date = post.config['date']
+            if date.year not in self.years:
+                self.years[str(date.year)] = []
+            #   months
+            m = date.strftime("%m")
+            y = self.years[str(date.year)]
+            if m not in y:
+                self.years[str(date.year)].append(m)
+
+            b = post.slug + '.html'
+            m = os.path.join(self.DEPLOY, post.year, post.month, b)
+
+            content = self.render(self.SINGLE, self._v({'post': post}))
+            self._write_to_file(m, content)
+
+    def make_post_directories(self):
+        """
+        If they don't exist, create post directories.
+            2011
+                01
+                03
+                12
+            2010
+                04
+                07
+        """
+        print 'Creating directories...'
+        keys = self.years.keys()
+        for k in keys:
+            m = os.path.join(self.DEPLOY, k)
+            if not os.path.exists(m):
+                os.mkdir(m)
+            months = self.years[k]
+            for month in months:
+                m = os.path.join(self.DEPLOY, k, month)
+                if not os.path.exists(m):
+                    os.mkdir(m)
+
+    def make_index_page(self):
+        """
+        Create an index page
+        """
+        m = os.path.join(self.DEPLOY, 'index.html')
+        if len(self.posts) > self.SETTINGS['posts_per_page']:
+            # Cut off unnecessary posts
+            n = len(self.posts)
+            n = self.SETTINGS['posts_per_page']
+            posts = self.posts[:n]
+            extra = True
+        else:
+            posts = self.posts
+            extra = False
+        contents = self.render(self.INDEX, self._v({'posts': posts, 'extra':
+            extra}))
+        self._write_to_file(m, contents)
+
+
+
 
 def main(directory):
     Generator(directory)
