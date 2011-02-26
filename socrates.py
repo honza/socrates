@@ -3,7 +3,6 @@ import shutil
 import yaml
 from django.conf import settings
 from django.template.defaultfilters import slugify
-from libs.markdown import markdown
 
 
 class Post(object):
@@ -69,13 +68,38 @@ class Post(object):
         f.close()
 
         config = yaml.load(conf)
-        try:
-            pr = self.context['text_processor']
-            if pr == 'markdown':
-                c = markdown(c)
-        except KeyError:
-            pass
+        c = self._process_contents(c)
         return c, config
+
+    def _process_contents(self, text):
+        """
+        Run contents through a text processor.
+        Options:
+            - markdown
+            - textile
+            - restructuredtext
+            - html
+        """
+        p = self.context['text_processor']
+        p = p.lower()
+
+        if p == 'markdown':
+            from markdown import markdown
+            html = markdown(text)
+        elif p == 'textile':
+            from textile import textile
+            html = textile(text)
+        elif p == 'restructuredtext':
+            from docutils.core import publish_parts
+            parts = publish_parts(source=text, writer_name="html4css1")
+            html = parts.get('fragment')
+        elif p == 'html':
+            html = text
+        else:
+            raise Exception("Unknown text processor")
+
+        return html
+
 
 
 class Generator(object):

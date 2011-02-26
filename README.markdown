@@ -26,9 +26,9 @@ This will create a `blog` directory with a simple blog structure:
             style.css
         config.yaml
 
-The `posts` directory is where you will place your posts files. `layout` is
-your basic theme or a template. `config.yaml` is a site-wide configuration
-file.
+The `posts` directory is where you will place your posts files. Anything
+prefixed with `-` or `.` will be ignored. `layout` is your basic theme or a
+template. `config.yaml` is a site-wide configuration file.
 
 When you are ready to generate your site, you run:
 
@@ -54,6 +54,23 @@ many values to that file and they will be available in the templates' context.
 
 Socrates uses django templates. The default theme isn't exactly pretty, but
 it's designed to show you what is possible and get you started very quickly.
+
+## Text to HTML
+
+Socrates will attemp to convert your text files into HTML using a text
+processor. You should specify the name of the text processor in `config.yaml`.
+It should be all lowercase. Currently supported processors:
+
+  - Markdown
+  - Textile
+  - reStructuredText
+  - HTML (unmodified text)
+
+To install a text processor, run:
+
+    $ pip install markdown
+    $ pip install textile
+    $ pip install docutils # reStructuredText
 
 ## Development
 
