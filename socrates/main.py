@@ -34,6 +34,7 @@ class Generator(object):
         self.DEPLOY = os.path.join(self.ROOT, 'deploy')
         if not os.path.exists(self.DEPLOY):
             os.mkdir(self.DEPLOY)
+        # TODO: This needs a better solution. Simlinks perhaps?
         if os.path.exists(os.path.join(self.DEPLOY, 'media')):
             shutil.rmtree(os.path.join(self.DEPLOY, 'media'))
         shutil.copytree(os.path.join(self.ROOT, 'layout', 'media'),
@@ -46,11 +47,13 @@ class Generator(object):
         x = (os.path.join(self.ROOT, 'layout'),)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=x)
         from django.template.loader import render_to_string
+        # Remap a django function to a method
         self.render = render_to_string
 
         self.posts = []
         self.categories = {}
         self.years = {}
+        self.archives = {}
 
         self.load_posts()
         self.process_posts()
@@ -59,90 +62,9 @@ class Generator(object):
         self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
 
         self.make_index_page()
-
-        # Save category pages
-        keys = self.categories.keys()
-        if len(keys) != 0:
-            # Make category dir
-            self.CATEGORIES = os.path.join(self.DEPLOY, 'category')
-            if not os.path.exists(self.CATEGORIES):
-                os.mkdir(self.CATEGORIES)
-            for k in keys:
-                p = os.path.join(self.CATEGORIES, slugify(k))
-                if not os.path.exists(p):
-                    os.mkdir(p)
-                posts = self.categories[k]
-                contents = render_to_string(self.CATEGORY, self._v({'category': k, 'posts':
-                    posts}))
-                m = os.path.join(p, 'index.html')
-                self._write_to_file(m, contents)
-
-        self.archives = {}
-        for post in self.posts:
-            d = str(post.year)
-            if d not in self.archives:
-                self.archives[d] = [post]
-            else:
-                self.archives[d].append(post)
-
-        keys = self.archives.keys()
-        if len(keys) != 0:
-            # Make category dir
-            self.ARCHIVES = os.path.join(self.DEPLOY, 'archive')
-            if not os.path.exists(self.ARCHIVES):
-                os.mkdir(self.ARCHIVES)
-            for k in keys:
-                p = os.path.join(self.ARCHIVES, slugify(k))
-                if not os.path.exists(p):
-                    os.mkdir(p)
-                posts = self.archives[k]
-                contents = render_to_string(self.ARCHIVE, self._v({'year': k, 'posts':
-                    posts}))
-                m = os.path.join(p, 'index.html')
-                self._write_to_file(m, contents)
-
-        num = len(self.posts)
-        per = int(self.SETTINGS['posts_per_page'])
-        pages = num/per
-
-        m = os.path.join(self.DEPLOY, 'page')
-        if not os.path.exists(m):
-            os.mkdir(m)
-        for x in range(1, pages + 1):
-            if x == 1:
-                prev = '/'
-            else:
-                prev = '/page/%d/' % x
-
-            if x < pages:
-                next = '/page/%d/' % int(x+1)
-            else:
-                next = None
-
-            n = per*x
-            p = self.posts[n:n+per]
-
-            v = {
-                'page': x+1,
-                'posts': p,
-                'prev': prev,
-                'total': pages+1,
-                'next': next
-            }
-
-            folder = self._get_page_str(x, pages+1)
-
-            e = os.path.join(m, folder)
-            if not os.path.exists(e):
-                os.mkdir(e)
-
-            contents = render_to_string(self.PAGED, self._v(v))
-            c = os.path.join(e, "index.html")
-            self._write_to_file(c, contents)
-            
-
-        for p in self.posts:
-            print p.filename
+        self.make_category_pages()
+        self.make_archive_pages()
+        self.make_pagination()
 
         print "Success!"
 
@@ -215,11 +137,18 @@ class Generator(object):
             y = self.years[str(date.year)]
             if m not in y:
                 self.years[str(date.year)].append(m)
-
+            # Archives
+            d = str(post.year)
+            if d not in self.archives:
+                self.archives[d] = [post]
+            else:
+                self.archives[d].append(post)
+            # Save the thing
             b = post.slug + '.html'
             m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
             content = self.render(self.SINGLE, self._v({'post': post}))
+            print post.filename
             self._write_to_file(m, content)
 
     def make_post_directories(self):
@@ -263,6 +192,92 @@ class Generator(object):
             extra}))
         self._write_to_file(m, contents)
 
+
+    def make_category_pages(self):
+        """
+        Make category pages. They go into the 'category' directory.
+        """
+        keys = self.categories.keys()
+        if len(keys) != 0:
+            # Make category dir
+            self.CATEGORIES = os.path.join(self.DEPLOY, 'category')
+            if not os.path.exists(self.CATEGORIES):
+                os.mkdir(self.CATEGORIES)
+            for k in keys:
+                p = os.path.join(self.CATEGORIES, slugify(k))
+                if not os.path.exists(p):
+                    os.mkdir(p)
+                posts = self.categories[k]
+                contents = self.render(self.CATEGORY, self._v({'category': k, 'posts':
+                    posts}))
+                m = os.path.join(p, 'index.html')
+                self._write_to_file(m, contents)
+
+    def make_archive_pages(self):
+        print 'Creating archives...'
+        keys = self.archives.keys()
+        if len(keys) != 0:
+            # Make category dir
+            self.ARCHIVES = os.path.join(self.DEPLOY, 'archive')
+            if not os.path.exists(self.ARCHIVES):
+                os.mkdir(self.ARCHIVES)
+            for k in keys:
+                p = os.path.join(self.ARCHIVES, slugify(k))
+                if not os.path.exists(p):
+                    os.mkdir(p)
+                posts = self.archives[k]
+                contents = self.render(self.ARCHIVE, self._v({'year': k, 'posts':
+                    posts}))
+                m = os.path.join(p, 'index.html')
+                self._write_to_file(m, contents)
+
+    def make_pagination(self):
+        """
+        Make pagination.
+            /page/2/
+            /page/3/
+        Uses posts per page setting
+        """
+        print 'Creating pagination...'
+        num = len(self.posts)
+        per = int(self.SETTINGS['posts_per_page'])
+        pages = num/per
+
+        m = os.path.join(self.DEPLOY, 'page')
+        if not os.path.exists(m):
+            os.mkdir(m)
+        for x in range(1, pages + 1):
+            if x == 1:
+                prev = '/'
+            else:
+                prev = '/page/%d/' % x
+
+            if x < pages:
+                next = '/page/%d/' % int(x+1)
+            else:
+                next = None
+
+            n = per*x
+            p = self.posts[n:n+per]
+
+            v = {
+                'page': x+1,
+                'posts': p,
+                'prev': prev,
+                'total': pages+1,
+                'next': next
+            }
+
+            folder = self._get_page_str(x, pages+1)
+
+            e = os.path.join(m, folder)
+            if not os.path.exists(e):
+                os.mkdir(e)
+
+            contents = self.render(self.PAGED, self._v(v))
+            c = os.path.join(e, "index.html")
+            self._write_to_file(c, contents)
+            
 
 
 
