@@ -354,11 +354,14 @@ class Generator(object):
 
 if __name__ == '__main__':
     from optparse import OptionParser
-
-    parser = OptionParser()
-    parser.add_option('-i', '--init', action='store', help='Some help')
-    parser.add_option('-g', '--generate', action='store', help='Some help')
-    parser.add_option('-r', '--run', action='store', help='Some help')
+    usage = "Socrates - static site generator\nUsage: socrates.py [options]"
+    parser = OptionParser(usage=usage)
+    parser.add_option('-i', '--init', action='store', 
+        help="Create a new blog in DIR", metavar="DIR")
+    parser.add_option('-g', '--generate', action='store',
+        help="Generate a static site for a site in DIR.", metavar="DIR")
+    parser.add_option('-r', '--run', action='store',
+            help="Run a simple server in DIR.", metavar="DIR")
 
     options, args = parser.parse_args()
 
