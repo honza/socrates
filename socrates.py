@@ -183,9 +183,8 @@ class Generator(object):
         Get all files from the posts directory, create Post instances and add
         them to the self.posts list.
         """
-        # TODO: Allow different file extensions
         for filename in os.listdir(self.POSTS):
-            if filename.endswith('.md'):
+            if not filename.startswith('.') and not filename.startswith('_'):
                 p = os.path.join(self.POSTS, filename)
                 self.posts.append(Post(p, self.SETTINGS))
         self.posts.reverse()
