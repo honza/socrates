@@ -352,11 +352,8 @@ class Generator(object):
             
 
 
-
-def main(directory):
-    Generator(directory)
+if __name__ == '__main__':
     from optparse import OptionParser
-
 
     parser = OptionParser()
     parser.add_option('-i', '--init', action='store', help='Some help')
@@ -366,19 +363,17 @@ def main(directory):
     options, args = parser.parse_args()
 
     if options.init:
-        import shutil
         try:
-            shutil.copytree('socrates/themes/default', options.init)
+            shutil.copytree('themes/default', options.init)
         except OSError:
             print "The '%s' directory already exists." % options.init
 
     if options.generate:
-        main(options.generate)
+        Generator(options.generate)
 
     if options.run:
         import SimpleHTTPServer
         import SocketServer
-        import os
 
         p = os.path.dirname(__file__)
         p = os.path.join(p, options.run, 'deploy')
