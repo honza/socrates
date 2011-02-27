@@ -1,0 +1,9 @@
+==== 0.2 (2011-02-26) ====
+	- complete rewrite
+	- faster execution
+	- socrates is now only one file
+	- add markdown, textile and reStructuredText
+	- remove pygments as dependency
+
+==== 0.1 (2011-02-25) ====
+	- initial release

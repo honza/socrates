@@ -1,5 +1,5 @@
 """
-Socrates 0.1
+Socrates 0.2
 
 Static site generator
 Author: Honza Pokorny <me@honza.ca> <http://github.com/honza/socrates>
