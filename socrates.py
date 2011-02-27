@@ -1,3 +1,10 @@
+"""
+Socrates 0.1
+
+Static site generator
+Author: Honza Pokorny <me@honza.ca> <http://github.com/honza/socrates>
+GPLv3
+"""
 import os
 import shutil
 import yaml
@@ -165,6 +172,9 @@ class Generator(object):
         print "Success!"
 
     def _get_page_str(self, current, total):
+        """
+        Return page number as a string for pagination.
+        """
         current += 1
         if total < 10:
             return str(current)
@@ -175,6 +185,9 @@ class Generator(object):
                 return str(current)
 
     def _get_post_cats(self, post):
+        """
+        Extract and save post's categories
+        """
         cats = post.config['categories']
         for c in cats:
             if c not in self.categories:
@@ -183,6 +196,9 @@ class Generator(object):
                 self.categories[c].append(post)
 
     def _get_settings(self):
+        """
+        Read main config file. Return dict.
+        """
         s = os.path.join(self.ROOT, 'config.yaml')
         if not os.path.exists(s):
             raise Exception('No config file.')
@@ -200,6 +216,9 @@ class Generator(object):
         f.close()
 
     def _v(self, vals):
+        """
+        Create a joint dict of global config and local template vals
+        """
         return dict(self.SETTINGS, **vals)
 
     def load_posts(self):
@@ -309,6 +328,9 @@ class Generator(object):
                 self._write_to_file(m, contents)
 
     def make_archive_pages(self):
+        """
+        Make archive pages. Only by year.
+        """
         print 'Creating archives...'
         keys = self.archives.keys()
         if len(keys) != 0:
