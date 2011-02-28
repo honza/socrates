@@ -237,26 +237,35 @@ class Generator(object):
         Collect all the necessary information about posts.
         """
         print 'Processing posts...'
-        self.make_post_directories()
         for post in self.posts:
             # Get categories
             self._get_post_cats(post)
+
             # Post dirs
             #   years
             date = post.config['date']
-            if date.year not in self.years:
-                self.years[str(date.year)] = []
+            year = str(date.year)
+            if year not in self.years:
+                self.years[year] = []
             #   months
             m = date.strftime("%m")
-            y = self.years[str(date.year)]
+            y = self.years[year]
             if m not in y:
-                self.years[str(date.year)].append(m)
+                self.years[year].append(m)
+
             # Archives
-            d = str(post.year)
+            d = year
             if d not in self.archives:
                 self.archives[d] = [post]
             else:
                 self.archives[d].append(post)
+
+        self.make_post_directories()
+        self.save_posts()
+
+    def save_posts(self):
+        print 'Saving posts...'
+        for post in self.posts:
             # Save the thing
             b = post.slug + '.html'
             m = os.path.join(self.DEPLOY, post.year, post.month, b)
@@ -293,7 +302,11 @@ class Generator(object):
         Create an index page
         """
         m = os.path.join(self.DEPLOY, 'index.html')
-        if len(self.posts) > self.SETTINGS['posts_per_page']:
+        if self.SETTINGS['posts_per_page'] == 0:
+            # List all posts on the index page
+            posts = self.posts
+            extra = False
+        elif len(self.posts) > self.SETTINGS['posts_per_page']:
             # Cut off unnecessary posts
             n = len(self.posts)
             n = self.SETTINGS['posts_per_page']
@@ -355,9 +368,12 @@ class Generator(object):
             /page/3/
         Uses posts per page setting
         """
+        per = int(self.SETTINGS['posts_per_page'])
+        if per == 0:
+            # Skip pagination if all posts are on index page
+            return
         print 'Creating pagination...'
         num = len(self.posts)
-        per = int(self.SETTINGS['posts_per_page'])
         pages = num/per
 
         m = os.path.join(self.DEPLOY, 'page')
