@@ -8,6 +8,7 @@ GPLv3
 import os
 import shutil
 import yaml
+from datetime import datetime
 from django.conf import settings
 from django.template.defaultfilters import slugify
 
@@ -39,6 +40,7 @@ class Post(object):
         self.year = str(self.config['date'].year)
         self.month = self.config['date'].strftime("%m")
         self.date = self.config['date'].strftime(self.context['date_format'])
+        self.atom_date = self._get_atom_date(self.config['date'])
 
         self.slug = slugify(self.config['title'])
         self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
@@ -78,6 +80,11 @@ class Post(object):
         c = self._process_contents(c)
         return c, config
 
+    def _get_atom_date(self, date):
+        d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
+        return d[:-2] + ':' + d[-2:]
+
+
     def _process_contents(self, text):
         """
         Run contents through a text processor.
@@ -100,6 +107,9 @@ class Post(object):
             from docutils.core import publish_parts
             parts = publish_parts(source=text, writer_name="html4css1")
             html = parts.get('fragment')
+        elif p == 'pygmentedmarkdown':
+            from pygmentedmarkdown import markdown
+            html = markdown(text)
         elif p == 'html':
             html = text
         else:
@@ -117,6 +127,7 @@ class Generator(object):
     CATEGORY = 'category.html'
     ARCHIVE = 'archive.html'
     PAGED = 'index_paged.html'
+    ATOM = 'atom.html'
 
     # Directories
     ROOT = None
@@ -165,6 +176,7 @@ class Generator(object):
         self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
 
         self.make_index_page()
+        self.make_atom()
         self.make_category_pages()
         self.make_archive_pages()
         self.make_pagination()
@@ -318,6 +330,31 @@ class Generator(object):
         contents = self.render(self.INDEX, self._v({'posts': posts, 'extra':
             extra}))
         self._write_to_file(m, contents)
+
+    def make_atom(self):
+        """
+        Create an atom feed 
+        """
+        m = os.path.join(self.DEPLOY, 'atom.xml')
+        if self.SETTINGS['posts_per_page'] == 0:
+            # List all posts on the index page
+            posts = self.posts
+        elif len(self.posts) > self.SETTINGS['posts_per_page']:
+            # Cut off unnecessary posts
+            n = len(self.posts)
+            n = self.SETTINGS['posts_per_page']
+            posts = self.posts[:n]
+        else:
+            posts = self.posts
+        contents = self.render(self.ATOM, self._v({'posts': posts, 'now':
+            self._get_atom_date()}))
+        self._write_to_file(m, contents)
+
+    def _get_atom_date(self):
+        date = datetime.utcnow()
+        d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
+        return d[:-2] + ':' + d[-2:]
+
 
 
     def make_category_pages(self):
