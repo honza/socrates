@@ -462,7 +462,13 @@ class Generator(object):
             
     def make_about_page(self):
         print 'Creating about page...'
-        path = os.path.join(self.ROOT, 'about.md')
+        files = os.listdir(self.ROOT)
+        path = ""
+        for f in files:
+            if f.startswith('about.'):
+                path = f
+                break
+        path = os.path.join(self.ROOT, path)
         about = Page(path, self.SETTINGS)
         v = {'page': about}
 
