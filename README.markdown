@@ -4,7 +4,8 @@ Socrates is a simple static site generator. It's geared towards blogs. You
 write your posts in your favorite plain text to HTML language (e.g. Markdown,
 textile) and save them as text files on your harddrive. Socrates then takes
 them, and creates a full HTML site for you. For free, you will get a home page
-which lists latest posts, single post pages, category pages, and archive pages.
+which lists latest posts, single post pages, category pages, archive pages,
+an about page and an atom feed.
 
 ## Usage
 
@@ -25,10 +26,12 @@ This will create a `blog` directory with a simple blog structure:
         media
             style.css
         config.yaml
+        about.md
 
 The `posts` directory is where you will place your posts files. Anything
-prefixed with `-` or `.` will be ignored. `layout` is your basic theme or a
-template. `config.yaml` is a site-wide configuration file.
+prefixed with `_` or `.` will be ignored. `layout` is your basic theme or a
+template. `config.yaml` is a site-wide configuration file. Don't forget to
+update the about file with relevant information.
 
 When you are ready to generate your site, you run:
 
@@ -66,7 +69,7 @@ It should be all lowercase. Currently supported processors:
   - reStructuredText
   - HTML (unmodified text)
 
-To install a text processor, run:
+To install a text processor, run one of the following:
 
     $ pip install markdown
     $ pip install textile
