@@ -13,21 +13,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 
 
-class Post(object):
-    """
-    Post object. Exposes the following attributes:
-        - filename (e.g. 2010-cool-post.md)
-        - path (e.g. /home/user/2010-cool-post.md)
-        - contents (post content)
-        - config (post front config)
-        - year, month, date (in the format specified in config.yaml)
-        - title
-        - url (e.g. /2010/02/cool-post/)
-        - categories (list)
-        - author (from config.yaml or from front config)
-
-    All attributes are calculated on init.
-    """
+class File(object):
 
     def __init__(self, path, context):
 
@@ -36,20 +22,7 @@ class Post(object):
 
         self.filename = os.path.basename(path)
         self.contents, self.config = self.get_contents()
-
-        self.year = str(self.config['date'].year)
-        self.month = self.config['date'].strftime("%m")
-        self.date = self.config['date'].strftime(self.context['date_format'])
-        self.atom_date = self._get_atom_date(self.config['date'])
-
-        self.slug = slugify(self.config['title'])
-        self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
         self.title = self.config['title']
-        self.categories = self.config['categories']
-        if 'author' not in self.config:
-            self.author = self.context['author']
-        else:
-            self.author = self.config['author']
 
     def get_contents(self):
         """
@@ -79,11 +52,6 @@ class Post(object):
         config = yaml.load(conf)
         c = self._process_contents(c)
         return c, config
-
-    def _get_atom_date(self, date):
-        d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
-        return d[:-2] + ':' + d[-2:]
-
 
     def _process_contents(self, text):
         """
@@ -118,11 +86,54 @@ class Post(object):
         return html
 
 
+class Post(File):
+    """
+    Post object. Exposes the following attributes:
+        - filename (e.g. 2010-cool-post.md)
+        - path (e.g. /home/user/2010-cool-post.md)
+        - contents (post content)
+        - config (post front config)
+        - year, month, date (in the format specified in config.yaml)
+        - title
+        - url (e.g. /2010/02/cool-post/)
+        - categories (list)
+        - author (from config.yaml or from front config)
+
+    All attributes are calculated on init.
+    """
+
+    def __init__(self, path, context):
+        super(Post, self).__init__(path, context)
+
+        self.year = str(self.config['date'].year)
+        self.month = self.config['date'].strftime("%m")
+        self.date = self.config['date'].strftime(self.context['date_format'])
+        self.atom_date = self._get_atom_date(self.config['date'])
+
+        self.slug = slugify(self.config['title'])
+        self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
+        self.categories = self.config['categories']
+        if 'author' not in self.config:
+            self.author = self.context['author']
+        else:
+            self.author = self.config['author']
+
+    def _get_atom_date(self, date):
+        d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
+        return d[:-2] + ':' + d[-2:]
+
+
+class Page(File):
+
+    def __init__(self, path, context):
+        super(Page, self).__init__(path, context)
+
 
 class Generator(object):
 
     # Templates
     SINGLE = 'single.html'
+    PAGE = 'page.html'
     INDEX = 'index.html'
     CATEGORY = 'category.html'
     ARCHIVE = 'archive.html'
@@ -180,6 +191,7 @@ class Generator(object):
         self.make_category_pages()
         self.make_archive_pages()
         self.make_pagination()
+        self.make_about_page()
 
         print "Success!"
 
@@ -448,6 +460,17 @@ class Generator(object):
             c = os.path.join(e, "index.html")
             self._write_to_file(c, contents)
             
+    def make_about_page(self):
+        print 'Creating about page...'
+        path = os.path.join(self.ROOT, 'about.md')
+        about = Page(path, self.SETTINGS)
+        v = {'page': about}
+
+        c = os.path.join(self.DEPLOY, 'about.html')
+
+        contents = self.render(self.PAGE, self._v(v))
+        self._write_to_file(c, contents)
+
 
 
 if __name__ == '__main__':
