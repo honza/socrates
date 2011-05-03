@@ -83,7 +83,7 @@ You can start a simple development server to aid you in development.
 
 ## License
 
-Socrates is licensed under the term of GPLv3.
+Socrates is licensed under the terms of the 3-clause BSD license.
 
 ## Contribute
 
