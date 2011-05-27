@@ -1,16 +1,54 @@
 """
-Socrates 0.2
-
+Socrates 0.3
 Static site generator
 Author: Honza Pokorny <me@honza.ca> <http://github.com/honza/socrates>
-GPLv3
+BSD licensed
 """
 import os
+import re
 import shutil
 import yaml
 from datetime import datetime
-from django.conf import settings
-from django.template.defaultfilters import slugify
+
+
+def slugify(value):
+    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    return re.sub('[-\s]+', '-', value)
+
+
+class DjangoRenderer(object):
+
+    def __init__(self, path):
+        try:
+            from django.conf import settings
+            from django.template.loader import render_to_string
+        except ImportError:
+            import sys
+            print "You have to install django to continue."
+            sys.exit(1)
+        path = os.path.abspath(path)
+        settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
+                TEMPLATE_DIRS=[path])
+        self._render = render_to_string
+
+    def render(self, template, values):
+        return self._render(template, values)
+
+
+class Jinja2Renderer(object):
+
+    def __init__(self, path):
+        try:
+            from jinja2 import Environment, FileSystemLoader
+        except ImportError:
+            import sys
+            print "You have to install jinja2 to continue."
+            sys.exit(1)
+        self.env = Environment(loader=FileSystemLoader(path))
+
+    def render(self, template, values):
+        t = self.env.get_template(template)
+        return t.render(values)
 
 
 class File(object):
@@ -112,7 +150,16 @@ class Post(File):
 
         self.slug = slugify(self.config['title'])
         self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
-        self.categories = self.config['categories']
+
+        categories = self.config['categories']
+        self.categories = []
+        for c in categories:
+            v = {
+                'name': c,
+                'slug': slugify(c)
+            }
+            self.categories.append(v)
+
         if 'author' not in self.config:
             self.author = self.context['author']
         else:
@@ -148,7 +195,6 @@ class Generator(object):
     # Global, site-wide settings
     SETTINGS = None
 
-
     def __init__(self, directory):
         m = os.path.dirname(os.path.dirname(__file__))
         self.ROOT = os.path.join(m, directory)
@@ -167,13 +213,7 @@ class Generator(object):
 
         self.POSTS = os.path.join(self.ROOT, 'posts')
         self.SETTINGS = self._get_settings()
-
-        # django boiler plate
-        x = (os.path.join(self.ROOT, 'layout'),)
-        settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=x)
-        from django.template.loader import render_to_string
-        # Remap a django function to a method
-        self.render = render_to_string
+        self.init_template_renderer()
 
         self.posts = []
         self.categories = {}
@@ -194,6 +234,19 @@ class Generator(object):
         self.make_about_page()
 
         print "Success!"
+
+    def init_template_renderer(self):
+        t = self.SETTINGS['templates']
+        layout = os.path.join(self.ROOT, 'layout')
+        if t == 'jinja2':
+            self.template = Jinja2Renderer(layout)
+        elif t == 'django':
+            self.template = DjangoRenderer(layout)
+        else:
+            raise NotImplementedError("I don't know this template type.")
+
+    def render(self, template, values):
+        return self.template.render(template, values)
 
     def _get_page_str(self, current, total):
         """

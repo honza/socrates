@@ -47,16 +47,21 @@ that directory and upload it to your server.
     virtualenv env --no-site-packages
     source env/bin/activate
     pip install -r requirements.txt
+    # If you want to use Django templates...
+    pip install django
+    # If you want to use Jinja2 templates...
+    pip install jinja2
 
 ## Config.yaml
 
 In the pre-generated `config.yaml` all the values are required. You can add as
 many values to that file and they will be available in the templates' context.
 
-## Default theme
+## Themes
 
-Socrates uses django templates. The default theme isn't exactly pretty, but
-it's designed to show you what is possible and get you started very quickly.
+Socrates supports Django templates and Jinja2 templates. You can specify which
+tempalating engine you wish to use in the `config.yaml` file. There are two
+basic themes in the `themes` directory to get you started.
 
 ## Text to HTML
 
