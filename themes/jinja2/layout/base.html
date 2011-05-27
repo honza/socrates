@@ -18,13 +18,13 @@
         <p>
             <strong>Categories:</strong>
             {% for cat in categories %}
-            <a href="/category/{{ cat.slug }}/">{{ cat.name }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="/category/{{ cat.slug }}/">{{ cat.name }}</a>{% if not loop.last %}, {% endif %}
             {% endfor %}
         </p>
         <p>
             <strong>Archives:</strong>
             {% for y in years %}
-            <a href="/archive/{{ y }}/">{{ y }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="/archive/{{ y }}/">{{ y }}</a>{% if not loop.last %}, {% endif %}
             {% endfor %}
         </p>
         <p>&copy; 2011 - All rights reserved. Licensed under the terms of

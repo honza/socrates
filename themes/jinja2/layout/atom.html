@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title>Honza Pokorny - Thoughts on web development</title>
+    <link href="{{ url }}/atom.xml" rel="self"/>
+    <link href="{{ url }}"/>
+    <updated>{{ now }}</updated>
+    <id>{{ url }}</id>
+
+    {% for post in posts %}
+        <entry>
+            <title>{{ post.title }}</title>
+            <author><name>Honza Pokorny</name></author>
+            <link href="{{ url }}/{{ post.url }}"/>
+            <updated>{{ post.atom_date }}</updated>
+            <published>{{ post.atom_date }}</published>
+            <id>{{ url }}/{{ post.url }}</id>
+
+            <content type="html">
+                {{ post.contents }}
+            </content>
+        </entry>
+    {% endfor %}
+</feed>

@@ -13,7 +13,7 @@
         </div>
         <div class="post-after">
             {% for c in post.categories %}
-            <a href="/category/{{ c.slug }}/">{{ c.name }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="/category/{{ c.slug }}/">{{ c.name }}</a>{% if not loop.last %}, {% endif %}
             {% endfor %}
         </div>
     </div>

@@ -8,14 +8,14 @@
                 {{ post.date }}
                 - Posted under:
                 {% for c in post.categories %}
-                    {% if not forloop.last %}
-                        {{ c.name }},
+                    {% if not loop.last %}
+                        {{ c }},
                     {% else %}
-                        {{ c.name }}
+                        {{ c }}
                     {% endif %}
                 {% endfor %}
             </small>
-            {{ post.contents|truncatewords_html:30|safe }}
+            {{ post.contents|truncate }}
         </div>
     {% endfor %}
 {% endblock %}
