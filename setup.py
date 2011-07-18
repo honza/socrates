@@ -1,5 +1,4 @@
 from setuptools import setup
-from socrates import __version__
 
 description =  'Socrates is a simple static site generator.'
 long_desc = """
@@ -13,7 +12,7 @@ an about page and an atom feed.
 
 setup(
     name='socrates',
-    version=__version__,
+    version='0.4.0',
     install_requires=['django', 'pyYAML', 'jinja2', 'docutils'],
     description=description,
     long_description=long_desc,
