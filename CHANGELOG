@@ -1,3 +1,14 @@
+==== 0.4 (2011-07-18) ====
+	- pip install support
+	- socrates executable
+
+==== 0.3 (2011-05-27) ====
+	- add jinja2 support
+	- add new theme
+	- about page support
+	- atom feed support
+	- Use BSD instead of GPL
+
 ==== 0.2 (2011-02-26) ====
 	- complete rewrite
 	- faster execution
