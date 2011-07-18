@@ -12,7 +12,7 @@ an about page and an atom feed.
 
 setup(
     name='socrates',
-    version='0.4.0',
+    version='0.4.1',
     install_requires=['django', 'pyYAML', 'jinja2', 'docutils'],
     description=description,
     long_description=long_desc,
@@ -20,9 +20,6 @@ setup(
     maintainer='Honza Pokorny',
     maintainer_email='me@honza.ca',
     packages=['socrates'],
-    entry_points={
-        'console_scripts': [
-            'socrates = socrates.main:main'
-        ]
-    }
+    include_package_data=True,
+    scripts=['bin/socrates'],
 )

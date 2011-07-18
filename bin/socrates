@@ -3,7 +3,7 @@
 import os
 import shutil
 from optparse import OptionParser
-from socrates import Generator
+import socrates
 
 def main():
     usage = "Socrates - static site generator\nUsage: socrates.py [options]"
@@ -18,13 +18,21 @@ def main():
     options, args = parser.parse_args()
 
     if options.init:
+        temp_path = os.path.join(
+            os.path.dirname(
+                os.path.abspath(
+                    socrates.__file__
+                )
+            ), 'themes')
         try:
-            shutil.copytree('themes/default', options.init)
-        except OSError:
-            print "The '%s' directory already exists." % options.init
+            shutil.copytree(
+                    os.path.join(temp_path, 'default'), 
+                    os.path.join(os.getcwd(), options.init))
+        except OSError, e:
+            print "The '%s' directory already exists." % e
 
     if options.generate:
-        Generator(options.generate)
+        socrates.Generator(options.generate)
 
     if options.run:
         import SimpleHTTPServer
@@ -41,3 +49,5 @@ def main():
             httpd.serve_forever()
         else:    
             print "The '%s' directory doesn't exist." % p
+
+main()
