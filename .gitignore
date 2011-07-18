@@ -1,3 +1,6 @@
 *.swp
 *.pyc
 .DS_Store
+dist/
+build/
+socrates.egg-info/
