@@ -14,7 +14,7 @@ Usage
 
 First, you need to create a new blog::
 
-    python socrates.py -i blog
+    $ socrates -i blog
 
 This will create a ``blog`` directory with a simple blog structure::
 
@@ -38,7 +38,7 @@ update the about file with relevant information.
 
 When you are ready to generate your site, you run::
 
-    python socrates.py -g blog
+    $ socrates -g blog
 
 This will place all the generated files in ``blog/deploy``. You can then take
 that directory and upload it to your server.
@@ -48,15 +48,9 @@ Installation
 
 ::
 
-    git clone https://github.com/honza/socrates.git
-    cd socrates
     virtualenv env --no-site-packages
     source env/bin/activate
-    pip install -r requirements.txt
-    # If you want to use Django templates...
-    pip install django
-    # If you want to use Jinja2 templates...
-    pip install jinja2
+    pip install -e git://github.com/honza/socrates.git#egg=socrates
 
 Config.yaml
 -------------------------------------------------------------------------------
@@ -84,18 +78,12 @@ processor. You should specify the name of the text processor in
   - reStructuredText
   - HTML (unmodified text)
 
-To install a text processor, run one of the following::
-
-    $ pip install markdown
-    $ pip install textile
-    $ pip install docutils # reStructuredText
-
 Development
 -------------------------------------------------------------------------------
 
 You can start a simple development server to aid you in development.::
 
-    python socrates.py -r blog
+    $ socrates -r blog
 
 License
 -------------------------------------------------------------------------------
