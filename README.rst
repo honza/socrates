@@ -97,6 +97,22 @@ You can start a simple development server to aid you in development.::
 
     $ socrates -r blog
 
+
+Documentation
+-------------------------------------------------------------------------------
+
+The documentation is contained within the ``docs`` directory and is written in
+reStructuredText using `Sphinx`_. The documentation is easily read in a
+standard text editor. However, you can build an HTML version like so::
+
+    $ pip install sphinx
+    $ cd docs/
+    $ make html
+    $ open _build/html/index.html
+
+Or, you can view the online version of the latest `documentation`_.
+
+
 License
 -------------------------------------------------------------------------------
 
@@ -119,3 +135,5 @@ Socrates was originally written by Honza Pokorny.
 
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
+.. _Sphinx: http://sphinx.pocoo.org/
+.. _documentation: http://readthedocs.org/docs/socrates/en/latest/index.html
