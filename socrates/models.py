@@ -129,7 +129,11 @@ class Post(File):
         self.atom_date = self._get_atom_date(self.config['date'])
 
         self.slug = slugify(self.config['title'])
-        self.url = "%s/%s/%s/" % (self.year, self.month, self.slug,)
+        if context['append_slash']:
+            url_template = '%s/%s/%s/'
+        else:
+            url_template = '%s/%s/%s'
+        self.url = url_template % (self.year, self.month, self.slug,)
 
         categories = self.config['categories']
         self.categories = []

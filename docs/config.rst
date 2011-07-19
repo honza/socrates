@@ -32,3 +32,7 @@ context.
 .. option:: templates
 
     'django' or 'jinja2'
+
+.. option:: append_slash
+
+    Whether a slash should be appended to post urls.

@@ -5,3 +5,4 @@ url: http://example.com
 date_format: "%B %d, %Y"
 text_processor: markdown
 templates: django
+append_slash: false
