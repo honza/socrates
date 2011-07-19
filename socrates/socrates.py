@@ -185,8 +185,16 @@ class Generator(object):
             b = post.slug + '.html'
             m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
-            content = self.render(self.SINGLE, self._v({'post': post}))
+            if 'template' in post.config.keys():
+                t = post.config['template']
+            else:
+                t = self.SINGLE
+
+            content = self.render(t, self._v({'post': post}))
+
+            # Print filename to show progress
             print post.filename
+
             self._write_to_file(m, content)
 
     def make_post_directories(self):
