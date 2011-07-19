@@ -1,6 +1,9 @@
 import os
+from datetime import datetime
+
 import yaml
 
+from processors import Processor
 from utils import slugify
 
 
@@ -12,10 +15,17 @@ class File(object):
         self.path = path
 
         self.filename = os.path.basename(path)
-        self.contents, self.config = self.get_contents()
+        self.parse()
+        # The file should have at least a title
         self.title = self.config['title']
 
-    def get_contents(self):
+    def parse(self):
+        if self.context['text_processor'] in ['markdown', 'textile', 'html']:
+            self._parse()
+        else:
+            self._parse_rst()
+
+    def _parse(self):
         """
         Read file contents. Extract yaml config. Return post contents and
         parsed config.
@@ -27,7 +37,7 @@ class File(object):
         end = False
         conf = ""
         for x in f:
-            if x.startswith('-'*80):
+            if x.startswith('-'*79):
                 if not start:
                     start = True
                 else:
@@ -40,9 +50,29 @@ class File(object):
                 c += x
         f.close()
 
-        config = yaml.load(conf)
-        c = self._process_contents(c)
-        return c, config
+        self.config = yaml.load(conf)
+        self.contents = self._process_contents(c)
+
+    def _parse_rst(self):
+        p = Processor(self.path, 'html')
+        self.contents = p.content
+        self.config = p.metadata
+        
+        d = datetime.strptime(
+                self.config['date'],
+                '%Y-%m-%d %H:%M'
+                )
+
+        self.year = d.year
+        self.month = d.strftime("%m")
+        self.date = d.strftime(self.context['date_format'])
+        try:
+            self.config['categories'] = self.config['categories'].split(', ')
+        except KeyError:
+            pass
+
+        self.config['date'] = d
+
 
     def _process_contents(self, text):
         """
@@ -50,7 +80,6 @@ class File(object):
         Options:
             - markdown
             - textile
-            - restructuredtext
             - html
         """
         p = self.context['text_processor']
@@ -67,15 +96,6 @@ class File(object):
                 print 'Please install textile to continue'
                 sys.exit(1)
             html = textile(text)
-        elif p == 'restructuredtext':
-            try:
-                from docutils.core import publish_parts
-            except ImportError:
-                import sys
-                print 'Please install docutils to continue'
-                sys.exit(1)
-            parts = publish_parts(source=text, writer_name="html4css1")
-            html = parts.get('fragment')
         elif p == 'html':
             html = text
         else:
