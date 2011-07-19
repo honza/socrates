@@ -118,4 +118,4 @@ Authors
 Socrates was originally written by Honza Pokorny.
 
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
-.. _Jinja2 template: http://jinja.pocoo.org/docs/
+.. _Jinja2 templates: http://jinja.pocoo.org/docs/
