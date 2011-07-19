@@ -49,5 +49,26 @@ file:
 This way, your posts can be processed by the native `Docutils`_ utility
 functions such as ``rst2html.py`` or ``rst2latex.py``.
 
+Options
+-------
+
+.. option:: title
+
+    The title of the post
+
+.. option:: date
+
+    Publish date; ``YYYY-MM-DD HH:MM``
+
+.. option:: categories
+
+    A list of categories
+
+.. option:: template
+
+    You can override the default template that the post is going to be rendered
+    with.
+
+
 .. _YAML: http://www.yaml.org/ 
 .. _Docutils: http://docutils.sourceforge.net/

@@ -18,5 +18,20 @@ Django.
     pip install django
     pip install jinja2
 
+If you're going to use a processor other than Markdown, you have to install
+that, too.
+
+textile
+
+.. code-block:: console
+
+    pip install textile
+
+reStructuredText
+
+.. code-block:: console
+
+    pip install docutils pygments
+
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
