@@ -46,11 +46,17 @@ that directory and upload it to your server.
 Installation
 -------------------------------------------------------------------------------
 
+First, set up your virtual environment and pip install Socrates.
+
 ::
 
     virtualenv env --no-site-packages
     source env/bin/activate
     pip install -e git://github.com/honza/socrates.git#egg=socrates
+
+The next step is to install your templates. At the moment, you can choose
+between `Django templates`_ and `Jinja2 templates`_. The default theme uses
+Django.
 
 Config.yaml
 -------------------------------------------------------------------------------
@@ -78,6 +84,12 @@ processor. You should specify the name of the text processor in
   - reStructuredText
   - HTML (unmodified text)
 
+By default, Socrates only installs the Markdown text processors. You can
+install the others with pip::
+
+    $ pip install textile
+    $ pip install docutils
+
 Development
 -------------------------------------------------------------------------------
 
@@ -104,3 +116,6 @@ Authors
 -------------------------------------------------------------------------------
 
 Socrates was originally written by Honza Pokorny.
+
+.. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
+.. _Jinja2 template: http://jinja.pocoo.org/docs/

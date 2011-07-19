@@ -10,6 +10,7 @@ class DjangoRenderer(object):
         except ImportError:
             import sys
             print "You have to install django to continue."
+            print "Run: pip install django"
             sys.exit(1)
         path = os.path.abspath(path)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
@@ -28,6 +29,7 @@ class Jinja2Renderer(object):
         except ImportError:
             import sys
             print "You have to install jinja2 to continue."
+            print "Run: pip install jinja2"
             sys.exit(1)
         self.env = Environment(loader=FileSystemLoader(path))
 

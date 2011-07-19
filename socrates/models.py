@@ -56,26 +56,30 @@ class File(object):
         p = self.context['text_processor']
         p = p.lower()
 
-        try:
-            if p == 'markdown':
-                from markdown import markdown
-                html = markdown(text)
-            elif p == 'textile':
+        if p == 'markdown':
+            from markdown import markdown
+            html = markdown(text)
+        elif p == 'textile':
+            try:
                 from textile import textile
-                html = textile(text)
-            elif p == 'restructuredtext':
+            except ImportError:
+                import sys
+                print 'Please install textile to continue'
+                sys.exit(1)
+            html = textile(text)
+        elif p == 'restructuredtext':
+            try:
                 from docutils.core import publish_parts
-                parts = publish_parts(source=text, writer_name="html4css1")
-                html = parts.get('fragment')
-            elif p == 'pygmentedmarkdown':
-                from pygmentedmarkdown import markdown
-                html = markdown(text)
-            elif p == 'html':
-                html = text
-            else:
-                raise Exception("Unknown text processor")
-        except ImportError:
-            raise Exception("Unknown text processor.")
+            except ImportError:
+                import sys
+                print 'Please install docutils to continue'
+                sys.exit(1)
+            parts = publish_parts(source=text, writer_name="html4css1")
+            html = parts.get('fragment')
+        elif p == 'html':
+            html = text
+        else:
+            raise Exception("Unknown text processor")
 
         return html
 

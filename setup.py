@@ -13,7 +13,7 @@ an about page and an atom feed.
 setup(
     name='socrates',
     version='0.4.1',
-    install_requires=['django', 'pyYAML', 'jinja2', 'docutils', 'markdown'],
+    install_requires=['pyYAML', 'markdown'],
     description=description,
     long_description=long_desc,
     author='Honza Pokorny',
