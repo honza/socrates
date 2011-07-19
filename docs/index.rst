@@ -11,7 +11,7 @@ an about page and an atom feed.
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
   installation
   usage
