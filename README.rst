@@ -9,6 +9,16 @@ them, and creates a full HTML site for you. For free, you will get a home page
 which lists latest posts, single post pages, category pages, archive pages,
 an about page and an atom feed.
 
+Features
+-------------------------------------------------------------------------------
+
+* Familiar Django and Jinja2 templates
+* Simple install via pip
+* Markdown, reStructuredText, Textile support
+* YAML configuration
+* Atom feed
+* Github pages compatible
+
 Usage
 -------------------------------------------------------------------------------
 
