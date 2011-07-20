@@ -36,3 +36,7 @@ context.
 .. option:: append_slash
 
     Whether a slash should be appended to post urls.
+
+.. option:: url_include_day
+
+    Whether to include the day with the month and year in the generated directories and urls.

@@ -116,7 +116,7 @@ class Generator(object):
         """
         Extract and save post's categories
         """
-        cats = post.config['categories']
+        cats = post.config.get('categories', [])
         for c in cats:
             if c not in self.categories:
                 self.categories[c] = [post]
@@ -174,13 +174,17 @@ class Generator(object):
             date = post.config['date']
             year = str(date.year)
             if year not in self.years:
-                self.years[year] = []
+                self.years[year] = {}
             #   months
             m = date.strftime("%m")
             y = self.years[year]
-            if m not in y:
-                self.years[year].append(m)
-
+            if m not in y.keys():
+                self.years[year][m] = []
+            
+            if self.SETTINGS['url_include_day']:
+                if post.day not in self.years[year][m]:
+                    self.years[year][m].append(post.day)
+                
             # Archives
             d = year
             if d not in self.archives:
@@ -196,7 +200,11 @@ class Generator(object):
         for post in self.posts:
             # Save the thing
             b = post.slug + '.html'
-            m = os.path.join(self.DEPLOY, post.year, post.month, b)
+            
+            if self.SETTINGS['url_include_day']:
+                m = os.path.join(self.DEPLOY, post.year, post.month, post.day, b)
+            else:
+                m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
             if 'template' in post.config.keys():
                 t = post.config['template']
@@ -215,11 +223,19 @@ class Generator(object):
         If they don't exist, create post directories.
             2011
                 01
+                  04
+                  05
+                  12
                 03
+                  09
+                  11
                 12
+                  21
             2010
                 04
+                  11
                 07
+                  30
         """
         print 'Creating directories...'
         keys = self.years.keys()
@@ -227,11 +243,20 @@ class Generator(object):
             m = os.path.join(self.DEPLOY, k)
             if not os.path.exists(m):
                 os.mkdir(m)
+                
             months = self.years[k]
             for month in months:
                 m = os.path.join(self.DEPLOY, k, month)
                 if not os.path.exists(m):
                     os.mkdir(m)
+                
+                if self.SETTINGS['url_include_day']:
+                    days = self.years[k][month]
+                    for day in days:
+                        m = os.path.join(self.DEPLOY, k, month, day)
+                        if not os.path.exists(m):
+                            os.mkdir(m)
+                
 
     def make_index_page(self):
         """

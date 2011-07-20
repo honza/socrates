@@ -5,3 +5,4 @@ url: http://example.com
 date_format: "%B %d, %Y"
 text_processor: markdown
 templates: jinja2
+url_include_day: true

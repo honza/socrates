@@ -125,17 +125,24 @@ class Post(File):
 
         self.year = str(self.config['date'].year)
         self.month = self.config['date'].strftime("%m")
+        self.day = self.config['date'].strftime("%d")
         self.date = self.config['date'].strftime(self.context['date_format'])
         self.atom_date = self._get_atom_date(self.config['date'])
 
         self.slug = slugify(self.config['title'])
+        
         if context['append_slash']:
             url_template = '%s/%s/%s/'
         else:
             url_template = '%s/%s/%s'
-        self.url = url_template % (self.year, self.month, self.slug,)
+        
+        if context['url_include_day']:
+            url_template = '%s/' + url_template
+            self.url = url_template % (self.year, self.month, self.day, self.slug,)
+        else:
+            self.url = url_template % (self.year, self.month, self.slug,)
 
-        categories = self.config['categories']
+        categories = self.config.get('categories', [])
         self.categories = []
         for c in categories:
             v = {
