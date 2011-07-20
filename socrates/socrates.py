@@ -1,7 +1,7 @@
 """
-Socrates
-Static site generator
-(c) 2011 - Honza Pokorny <me@honza.ca> <http://github.com/honza/socrates>
+Socrates - Static site generator
+(c) 2011 - Honza Pokorny
+http://github.com/honza/socrates
 BSD licensed
 """
 import os
@@ -15,6 +15,10 @@ from utils import slugify
 
 
 class Generator(object):
+    """
+    This is the main class of the application. It handles the collection,
+    processing and rendering of the site.
+    """
 
     # Templates
     SINGLE = 'single.html'
@@ -40,10 +44,11 @@ class Generator(object):
         if not os.path.exists(self.ROOT):
             print "The '%s' directory doesn't exist." % directory
             return
+        # Set up deploy directory
         self.DEPLOY = os.path.join(self.ROOT, 'deploy')
         if not os.path.exists(self.DEPLOY):
             os.mkdir(self.DEPLOY)
-        # TODO: This needs a better solution. Simlinks perhaps?
+        # Copy media files to deploy destination
         if os.path.exists(os.path.join(self.DEPLOY, 'media')):
             shutil.rmtree(os.path.join(self.DEPLOY, 'media'))
         shutil.copytree(os.path.join(self.ROOT, 'layout', 'media'),
@@ -64,6 +69,7 @@ class Generator(object):
         self.SETTINGS = dict(self.SETTINGS, **{'categories': self.categories})
         self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
 
+        # Create html files
         self.make_index_page()
         self.make_atom()
         self.make_category_pages()
@@ -74,6 +80,9 @@ class Generator(object):
         print "Success!"
 
     def init_template_renderer(self):
+        """
+        Create and save a reference to an instance of a template renderer
+        """
         t = self.SETTINGS['templates']
         layout = os.path.join(self.ROOT, 'layout')
         if t == 'jinja2':
@@ -84,6 +93,10 @@ class Generator(object):
             raise NotImplementedError("I don't know this template type.")
 
     def render(self, template, values):
+        """
+        Give a template name and a dict of values, return an HTML
+        representation of a page/post.
+        """
         return self.template.render(template, values)
 
     def _get_page_str(self, current, total):
@@ -265,8 +278,6 @@ class Generator(object):
         date = datetime.utcnow()
         d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
         return d[:-2] + ':' + d[-2:]
-
-
 
     def make_category_pages(self):
         """
