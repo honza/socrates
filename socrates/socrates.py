@@ -140,7 +140,7 @@ class Generator(object):
         Create a file (path) with contents
         """
         f = open(path, 'w')
-        f.write(contents)
+        f.write(contents.encode("utf-8"))
         f.close()
 
     def _v(self, vals):

@@ -87,7 +87,7 @@ class File(object):
 
         if p == 'markdown':
             from markdown import markdown
-            html = markdown(text)
+            html = markdown(unicode(text, "utf-8"))
         elif p == 'textile':
             try:
                 from textile import textile
