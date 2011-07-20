@@ -12,7 +12,7 @@ an about page and an atom feed.
 
 setup(
     name='socrates',
-    version='0.4.1',
+    version='0.5.0',
     install_requires=['pyYAML', 'markdown'],
     description=description,
     long_description=long_desc,

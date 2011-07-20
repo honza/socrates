@@ -1,3 +1,14 @@
+==== 0.5 (2011-07-20) ====
+	- Add append slash setting
+	- Github pages support
+	- rst native support (with pygments)
+	- Per post template overrides
+	- Remove many dependencies
+	- Command-line usage simplification
+	- Allow day in urls (thurloat)
+	- Make dev server serve files without .html extension (thurloat)
+	- Unicode fixes (thurloat)
+
 ==== 0.4 (2011-07-18) ====
 	- pip install support
 	- socrates executable
