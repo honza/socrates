@@ -46,9 +46,19 @@ prefixed with ``_`` or ``.`` will be ignored. ``layout`` is your basic theme or
 a template. ``config.yaml`` is a site-wide configuration file. Don't forget to
 update the about file with relevant information.
 
+You can also create a new blog in the current working directory::
+
+    $ socrates -i
+
 When you are ready to generate your site, you run::
 
     $ socrates -g blog
+
+Or, ::
+
+    $ socrates -g
+
+for current directory.
 
 This will place all the generated files in ``blog/deploy``. You can then take
 that directory and upload it to your server.
@@ -106,6 +116,12 @@ Development
 You can start a simple development server to aid you in development.::
 
     $ socrates -r blog
+
+Or, ::
+
+    $ socrates -r
+
+for current directory.
 
 
 Documentation

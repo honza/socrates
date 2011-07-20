@@ -6,16 +6,27 @@ from optparse import OptionParser
 import socrates
 
 def main():
-    usage = "Socrates - static site generator\nUsage: socrates.py [options]"
+    usage = "Usage: socrates.py [options] path"
     parser = OptionParser(usage=usage)
-    parser.add_option('-i', '--init', action='store', 
-        help="Create a new blog in DIR", metavar="DIR")
-    parser.add_option('-g', '--generate', action='store',
-        help="Generate a static site for a site in DIR.", metavar="DIR")
-    parser.add_option('-r', '--run', action='store',
-            help="Run a simple server in DIR.", metavar="DIR")
+    parser.add_option('-i', '--init', action='store_true', 
+        help="Create a new blog.")
+
+    parser.add_option('-g', '--generate', action='store_true',
+        help="Generate a static site.")
+
+    parser.add_option('-r', '--run', action='store_true',
+            help="Run a simple server.")
 
     options, args = parser.parse_args()
+
+    if len(args) > 1:
+        return
+    try:
+        path = args[0]
+        if not path.startswith(( '/', '~/' )):
+            path = os.path.join(os.getcwd(), path)
+    except IndexError:
+        path = os.getcwd()
 
     if options.init:
         temp_path = os.path.join(
@@ -27,21 +38,20 @@ def main():
         try:
             shutil.copytree(
                     os.path.join(temp_path, 'default'), 
-                    os.path.join(os.getcwd(), options.init))
+                    path)
         except OSError, e:
             print "The '%s' directory already exists." % e
 
     if options.generate:
-        socrates.Generator(options.generate)
+        socrates.Generator(path)
 
     if options.run:
         import SimpleHTTPServer
         import SocketServer
 
-        p = os.path.dirname(__file__)
-        p = os.path.join(p, options.run, 'deploy')
+        p = os.path.join(path, 'deploy')
         if os.path.exists(p):
-            os.chdir('%s/deploy' % options.run)
+            os.chdir('%s/deploy' % path)
             PORT = 8000
             Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
             httpd = SocketServer.TCPServer(("", PORT), Handler)
