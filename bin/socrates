@@ -48,12 +48,22 @@ def main():
     if options.run:
         import SimpleHTTPServer
         import SocketServer
+        
+        class FixRedirectHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+            def do_GET(self):
+                if self.path.endswith("/"):
+                    self.path += "index.html"
+                elif "." in self.path:
+                    self.path = self.path
+                else:
+                    self.path += ".html"
+                return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
         p = os.path.join(path, 'deploy')
         if os.path.exists(p):
             os.chdir('%s/deploy' % path)
             PORT = 8000
-            Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+            Handler = FixRedirectHandler
             httpd = SocketServer.TCPServer(("", PORT), Handler)
             print "serving at port", PORT
             httpd.serve_forever()
