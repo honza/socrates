@@ -24,7 +24,7 @@ except ImportError:
     sys.exit(1)
 
 # Set to True if you want inline CSS styles instead of classes
-INLINESTYLES = True
+INLINESTYLES = False
 
 # The default formatter
 DEFAULT = LatexFormatter()
@@ -84,10 +84,11 @@ class Processor(object):
         def depart_field_body(self, node):
             pass
 
-    def __init__(self, filename, output='html'):
+    def __init__(self, filename, output='html', header_level=2):
         self.filename = filename
         if output not in self.allowed_types:
             raise NotImplementedError("Can't render '%s'." % output)
+        self.header_level = str(header_level)
         self.output = output
         self.metadata = None
         self.get_publisher()
@@ -119,7 +120,9 @@ class Processor(object):
                 self.metadata[name] = value
 
     def get_publisher(self):
-        extra_params = {'initial_header_level': '2'}
+        extra_params = {
+            'initial_header_level': self.header_level
+        }
         pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', self.output)
         pub.process_programmatic_settings(None, extra_params, None)
@@ -131,11 +134,9 @@ class Processor(object):
         parts = self.pub.writer.parts
         if self.output == 'html':
             content = parts.get('body')
-            #docinfo = parts.get('docinfo')
         elif self.output == 'latex' or self.output == 'xetex':
             content = parts.get('body')
             content = parts.get('whole')
-            #docinfo = parts.get('docinfo')
         else:
             pass
         self.content = content
