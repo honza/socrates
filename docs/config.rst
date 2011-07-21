@@ -40,3 +40,8 @@ context.
 .. option:: url_include_day
 
     Whether to include the day with the month and year in the generated directories and urls.
+
+.. option:: initial_header_level
+
+    By default, the first heading in your document will be ``<h2>``. Only
+    available for reStructuredText posts.

@@ -54,7 +54,11 @@ class File(object):
         self.contents = self._process_contents(c)
 
     def _parse_rst(self):
-        p = Processor(self.path, 'html')
+        try:
+            h = self.context['initial_header_level']
+        except KeyError:
+            h = 2
+        p = Processor(self.path, 'html', h)
         self.contents = p.content
         self.config = p.metadata
         
