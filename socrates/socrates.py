@@ -14,6 +14,22 @@ from models import Post, Page
 from utils import slugify
 
 
+DEFAULTS = {
+    'author': 'author',
+    'site_name': 'Socrates site',
+    'posts_per_page': 10,
+    'url': 'http://example.com',
+    'date_format': '%B %d, %Y',
+    'text_processor': 'markdown',
+    'templates': 'django',
+    'append_slash': True,
+    'url_include_day': False,
+    'initial_header_level': 2,
+    'skip_archives': False,
+    'skip_categories': False
+}
+
+
 class Generator(object):
     """
     This is the main class of the application. It handles the collection,
@@ -73,12 +89,10 @@ class Generator(object):
         self.make_index_page()
         self.make_atom()
 
-        if 'skip_categories' in self.SETTINGS:
-            if not self.SETTINGS['skip_categories']:
-                self.make_category_pages()
-        if 'skip_archives' in self.SETTINGS:
-            if not self.SETTINGS['skip_archives']:
-                self.make_archive_pages()
+        if not self.SETTINGS['skip_categories']:
+            self.make_category_pages()
+        if not self.SETTINGS['skip_archives']:
+            self.make_archive_pages()
 
         self.make_pagination()
         self.make_about_page()
@@ -139,7 +153,7 @@ class Generator(object):
         f = open(s, 'r')
         c = f.read()
         f.close()
-        return yaml.load(c)
+        return dict(DEFAULTS, **yaml.load(c))
 
     def _write_to_file(self, path, contents):
         """

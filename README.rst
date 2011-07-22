@@ -78,13 +78,6 @@ The next step is to install your templates. At the moment, you can choose
 between `Django templates`_ and `Jinja2 templates`_. The default theme uses
 Django.
 
-Config.yaml
--------------------------------------------------------------------------------
-
-In the pre-generated ``config.yaml`` all the values are required. You can add
-as many values to that file and they will be available in the templates'
-context.
-
 Themes
 -------------------------------------------------------------------------------
 
