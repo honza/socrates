@@ -1,14 +1,7 @@
 from setuptools import setup
 
 description =  'Socrates is a simple static site generator.'
-long_desc = """
-Socrates is a simple static site generator. It's geared towards blogs. You
-write your posts in your favorite plain text to HTML language (e.g. Markdown,
-textile) and save them as text files on your harddrive. Socrates then takes
-them, and creates a full HTML site for you. For free, you will get a home page
-which lists latest posts, single post pages, category pages, archive pages,
-an about page and an atom feed.
-"""
+long_desc = open('README.rst').read()
 
 setup(
     name='socrates',
