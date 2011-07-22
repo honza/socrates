@@ -150,9 +150,7 @@ class Generator(object):
         s = os.path.join(self.ROOT, 'config.yaml')
         if not os.path.exists(s):
             raise Exception('No config file.')
-        f = open(s, 'r')
-        c = f.read()
-        f.close()
+        c = open(s, 'r').read()
         return dict(DEFAULTS, **yaml.load(c))
 
     def _write_to_file(self, path, contents):
