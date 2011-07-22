@@ -6,6 +6,17 @@ import yaml
 from processors import Processor
 from utils import slugify
 
+EXTENSIONS = {
+    '.md': 'markdown',
+    '.markdown': 'markdown',
+    '.mkdn': 'markdown',
+    '.rst': 'rst',
+    '.html': 'html',
+    '.htm': 'html',
+    '.txt': 'html',
+    '.textile': 'textile'
+}
+
 
 class File(object):
 
@@ -19,11 +30,31 @@ class File(object):
         # The file should have at least a title
         self.title = self.config['title']
 
+    def _get_type(self):
+        name, extension = os.path.splitext(self.path)
+        try:
+            self.file_type = EXTENSIONS[extension]
+            return self.file_type
+        except KeyError:
+            raise Exception('Unknown extension')
+
     def parse(self):
+        """
+        Decide what file type the current file is.
+        """
+        is_rst = False
+
+        if self.context['text_processor'] == 'extension':
+            file_type = self._get_type()
+            is_rst = file_type == 'rst'
+
         if self.context['text_processor'] in ['markdown', 'textile', 'html']:
-            self._parse()
-        else:
+            is_rst = False
+
+        if is_rst:
             self._parse_rst()
+        else:
+            self._parse()
 
     def _parse(self):
         """
@@ -86,7 +117,7 @@ class File(object):
             - textile
             - html
         """
-        p = self.context['text_processor']
+        p = self.file_type
         p = p.lower()
 
         if p == 'markdown':

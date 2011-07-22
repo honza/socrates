@@ -27,7 +27,22 @@ context.
 
 .. option:: text_processor
 
-    Which X to html processor to use; 'markdown', 'textile', 'rst', 'html'
+    Which X to html processor to use; *markdown*, *textile*, *rst*, *html*,
+    *extension*. The 'extension' setting will decide on the processor to be
+    used based on the post's file extension:
+
+    * Markdown
+        + .md
+        + .markdown
+        + .mkdn
+    * reStructuredText
+        + .rst
+    * HTML
+        + .html
+        + .htm
+        + .txt
+    * Textile
+        + .textile
 
 .. option:: templates
 
