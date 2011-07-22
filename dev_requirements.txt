@@ -1,1 +1,8 @@
-pyYAML==3.09
+pyYAML
+django
+jinja2
+docutils
+sphinx
+pygments
+markdown
+textile
