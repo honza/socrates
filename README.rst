@@ -72,6 +72,12 @@ First, set up your virtual environment and pip install Socrates.
 
     virtualenv env --no-site-packages
     source env/bin/activate
+    pip install socrates
+
+Or, to get the latest code, you can install from Github.
+
+::
+
     pip install -e git://github.com/honza/socrates.git#egg=socrates
 
 The next step is to install your templates. At the moment, you can choose
