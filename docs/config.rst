@@ -60,3 +60,12 @@ context.
 
     By default, the first heading in your document will be ``<h2>``. Only
     available for reStructuredText posts.
+
+.. option:: skip_archives
+
+    `false` by default. If set to `true`, it won't bother generating archives.
+
+.. option:: skip_categories
+
+    `false` by default. If set to `true`, it won't bother generating
+    categories.

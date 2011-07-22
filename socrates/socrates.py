@@ -72,8 +72,14 @@ class Generator(object):
         # Create html files
         self.make_index_page()
         self.make_atom()
-        self.make_category_pages()
-        self.make_archive_pages()
+
+        if 'skip_categories' in self.SETTINGS:
+            if not self.SETTINGS['skip_categories']:
+                self.make_category_pages()
+        if 'skip_archives' in self.SETTINGS:
+            if not self.SETTINGS['skip_archives']:
+                self.make_archive_pages()
+
         self.make_pagination()
         self.make_about_page()
 
