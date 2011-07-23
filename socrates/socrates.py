@@ -26,7 +26,9 @@ DEFAULTS = {
     'url_include_day': False,
     'initial_header_level': 2,
     'skip_archives': False,
-    'skip_categories': False
+    'skip_categories': False,
+    'inline_css': False,
+    'pygments': None
 }
 
 
@@ -96,6 +98,11 @@ class Generator(object):
 
         self.make_pagination()
         self.make_about_page()
+        
+        if not self.SETTINGS['inline_css']:
+            from pygments.formatters import HtmlFormatter
+            css_content = HtmlFormatter(**self.SETTINGS['pygments']).get_style_defs('.highlight')
+            self._write_to_file(os.path.join(self.DEPLOY,'media', 'pygments.css'), css_content)
 
         print "Success!"
 

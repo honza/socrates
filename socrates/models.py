@@ -89,7 +89,7 @@ class File(object):
             h = self.context['initial_header_level']
         except KeyError:
             h = 2
-        p = Processor(self.path, 'html', h)
+        p = Processor(self.path, self.context, 'html', h)
         self.contents = p.content
         self.config = p.metadata
         

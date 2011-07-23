@@ -42,6 +42,7 @@ class Pygments(Directive):
     final_argument_whitespace = True
     option_spec = dict([(key, directives.flag) for key in VARIANTS])
     has_content = True
+    formatter = DEFAULT
 
     def run(self):
         self.assert_has_content()
@@ -51,14 +52,11 @@ class Pygments(Directive):
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
         # take an arbitrary option if more than one is given
-        formatter = self.options and VARIANTS[self.options.keys()[0]] or DEFAULT
-        parsed = highlight(u'\n'.join(self.content), lexer, formatter)
+        if self.options and VARIANTS[self.options.keys()[0]]:
+            self.formatter = VARIANTS[self.options.keys()[0]]
+        
+        parsed = highlight(u'\n'.join(self.content), lexer, self.formatter)
         return [nodes.raw('', parsed, format='html')]
-
-
-directives.register_directive('sourcecode', Pygments)
-directives.register_directive('code-block', Pygments)
-
 
 class Processor(object):
 
@@ -84,7 +82,14 @@ class Processor(object):
         def depart_field_body(self, node):
             pass
 
-    def __init__(self, filename, output='html', header_level=2):
+
+    def __init__(self, filename, global_settings, output='html', header_level=2):
+        self.settings = global_settings 
+        self.pygments_builder()
+        
+        directives.register_directive('sourcecode', self.pygmenter)
+        directives.register_directive('code-block', self.pygmenter)
+        
         self.filename = filename
         if output not in self.allowed_types:
             raise NotImplementedError("Can't render '%s'." % output)
@@ -94,6 +99,13 @@ class Processor(object):
         self.get_publisher()
         self.get_metadata()
         self.run()
+
+    def pygments_builder(self):
+        
+        self.pygmenter = Pygments
+        if self.settings['pygments']:
+            print self.settings['pygments']
+            self.pygmenter.formatter = HtmlFormatter(**self.settings['pygments'])
 
     def render_node_to_html(self, document, node):
         if self.output == 'html':
