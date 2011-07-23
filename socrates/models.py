@@ -27,6 +27,7 @@ class File(object):
 
         self.filename = os.path.basename(path)
         self.parse()
+
         # The file should have at least a title
         self.title = self.config['title']
 
@@ -52,9 +53,9 @@ class File(object):
             is_rst = False
 
         if is_rst:
-            self._parse_rst()
-        else:
             self._parse()
+        else:
+            self._parse_rst()
 
     def _parse(self):
         """
