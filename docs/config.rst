@@ -70,3 +70,33 @@ you add in there will be made available in your templates' context.
 
     If set to `true`, it won't bother generating categories. Defaults to
     `false`.
+
+.. option:: pygments
+
+    Additional settings for the Pygments HTML Parser. It passes the arguments
+    directly to the ``HtmlFormatter`` class when it's instanciated, so these
+    settings include all of the available settings for ``HtmlFormatter``
+
+    sample:
+
+    .. code-block:: yaml
+
+        pygments:
+            linenos: true
+            noclasses: false
+            style: 'pastie'
+
+
+    .. option:: style
+        
+        The style option has many default built in styles for your code blocks.
+        The ones that ship with Pygments are: ``monokai``, ``manni``, ``perldoc``,
+        ``borland``, ``colorful``, ``default``, ``murphy``, ``vs``, ``trac``, 
+        ``tango``, ``fruity``, ``autumn``, ``bw``, ``emacs``, ``vim``, 
+        ``pastie``, ``friendly``, ``native``
+
+.. option:: inline_css
+
+    Whether or not you want pygments to output a ``pygments.css`` file in your
+    build directory for css. If set to ``false`` it will output the file.
+
