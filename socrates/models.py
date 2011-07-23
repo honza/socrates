@@ -177,7 +177,7 @@ class Post(File):
         else:
             self.url = url_template % (self.year, self.month, self.slug,)
 
-        categories = self.config.get('categories', [])
+        categories = self.config.get('categories', ['Uncategorized',])
         self.categories = []
         for c in categories:
             v = {

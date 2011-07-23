@@ -136,7 +136,7 @@ class Generator(object):
         """
         Extract and save post's categories
         """
-        cats = post.config.get('categories', [])
+        cats = post.config.get('categories', ['Uncategorized'])
         for c in cats:
             if c not in self.categories:
                 self.categories[c] = [post]
