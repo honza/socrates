@@ -27,6 +27,7 @@ Contents:
   usage
   config
   writing
+  examples
 
 Indices and tables
 ==================
