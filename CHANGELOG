@@ -1,3 +1,12 @@
+==== 0.6.0 (2011-07-23) ====
+	- Don't add pygments styles inline
+	- Extension based processing
+	- Allow skipping of archives and categories
+	- Register Socrates in Pypi
+	- Add pygments settings (thurloat)
+	- Fix dev server (thurloat)
+	- Mark posts with no categories as 'Uncategorized' (thurloat)
+
 ==== 0.5 (2011-07-20) ====
 	- Add append slash setting
 	- Github pages support
