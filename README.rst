@@ -148,15 +148,6 @@ Contribute
 
 All contributions are welcome. 
 
-TODO
--------------------------------------------------------------------------------
-
-If you're looking for ideas on what features to implement, this is a good place
-to start. This list will be update as we go along.
-
-* Add pygments settings to ``config.yaml``
-* Better error messages (exception handling)
-
 Bugs & Issues
 -------------------------------------------------------------------------------
 
