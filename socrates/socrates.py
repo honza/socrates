@@ -5,6 +5,7 @@ http://github.com/honza/socrates
 BSD licensed
 """
 import os
+import sys
 import shutil
 import yaml
 from datetime import datetime
@@ -12,6 +13,7 @@ from datetime import datetime
 from renderers import DjangoRenderer, Jinja2Renderer
 from models import Post, Page
 from utils import slugify
+from exceptions import ConfigurationError
 
 
 DEFAULTS = {
@@ -30,6 +32,9 @@ DEFAULTS = {
     'inline_css': False,
     'pygments': {}
 }
+
+
+AVAILABLE_EXTENSIONS = ['markdown', 'rst', 'textile', 'html', 'extension']
 
 
 class Generator(object):
@@ -74,6 +79,11 @@ class Generator(object):
 
         self.POSTS = os.path.join(self.ROOT, 'posts')
         self.SETTINGS = self._get_settings()
+        if self.SETTINGS['text_processor'] not in AVAILABLE_EXTENSIONS:
+            ext = self.SETTINGS['text_processor']
+            print "WARNING: %s isn't a recognizeed text processor." % ext
+            print 'Exiting...'
+            sys.exit(1)
         self.init_template_renderer()
 
         self.posts = []
@@ -185,7 +195,12 @@ class Generator(object):
         for filename in os.listdir(self.POSTS):
             if not filename.startswith('.') and not filename.startswith('_'):
                 p = os.path.join(self.POSTS, filename)
-                self.posts.append(Post(p, self.SETTINGS))
+                try:
+                    self.posts.append(Post(p, self.SETTINGS))
+                except ConfigurationError:
+                    print "WARNING: %s isn't configured properly." % filename
+                    print "Exiting..."
+                    sys.exit(1)
         self.posts.reverse()
 
     def process_posts(self):

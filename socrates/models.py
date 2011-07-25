@@ -5,6 +5,7 @@ import yaml
 
 from processors import Processor
 from utils import slugify
+from exceptions import ConfigurationError
 
 EXTENSIONS = {
     '.md': 'markdown',
@@ -29,7 +30,10 @@ class File(object):
         self.parse()
 
         # The file should have at least a title
-        self.title = self.config['title']
+        try:
+            self.title = self.config['title']
+        except KeyError:
+            raise ConfigurationError
 
     def _get_type(self):
         name, extension = os.path.splitext(self.path)
@@ -97,7 +101,10 @@ class File(object):
         try:
             d = datetime.strptime(self.config['date'], '%Y-%m-%d %H:%M')
         except ValueError:
-            d = datetime.strptime(self.config['date'], '%Y-%m-%d %H:%M:%S')
+            try:
+                d = datetime.strptime(self.config['date'], '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                raise ConfigurationError
 
         self.year = d.year
         self.month = d.strftime("%m")
