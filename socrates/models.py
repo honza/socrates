@@ -53,9 +53,9 @@ class File(object):
             is_rst = False
 
         if is_rst:
-            self._parse()
-        else:
             self._parse_rst()
+        else:
+            self._parse()
 
     def _parse(self):
         """
@@ -94,10 +94,10 @@ class File(object):
         self.contents = p.content
         self.config = p.metadata
 
-        d = datetime.strptime(
-                self.config['date'],
-                '%Y-%m-%d %H:%M'
-                )
+        try:
+            d = datetime.strptime(self.config['date'], '%Y-%m-%d %H:%M')
+        except ValueError:
+            d = datetime.strptime(self.config['date'], '%Y-%m-%d %H:%M:%S')
 
         self.year = d.year
         self.month = d.strftime("%m")
