@@ -28,7 +28,7 @@ DEFAULTS = {
     'skip_archives': False,
     'skip_categories': False,
     'inline_css': False,
-    'pygments': None
+    'pygments': {}
 }
 
 
