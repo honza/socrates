@@ -5,7 +5,7 @@ long_desc = open('README.rst').read()
 
 setup(
     name='socrates',
-    version='0.6.0',
+    version='0.6.1',
     install_requires=['pyYAML', 'markdown'],
     description=description,
     long_description=long_desc,
