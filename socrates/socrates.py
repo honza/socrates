@@ -98,11 +98,14 @@ class Generator(object):
 
         self.make_pagination()
         self.make_about_page()
-        
+
         if not self.SETTINGS['inline_css']:
             from pygments.formatters import HtmlFormatter
-            css_content = HtmlFormatter(**self.SETTINGS['pygments']).get_style_defs('.highlight')
-            self._write_to_file(os.path.join(self.DEPLOY,'media', 'pygments.css'), css_content)
+            formatter = HtmlFormatter(**self.SETTINGS['pygments'])
+            css_content = formatter.get_style_defs('.highlight')
+            self._write_to_file(
+                os.path.join(self.DEPLOY, 'media', 'pygments.css'),
+                css_content)
 
         print "Success!"
 
@@ -205,11 +208,11 @@ class Generator(object):
             y = self.years[year]
             if m not in y.keys():
                 self.years[year][m] = []
-            
+
             if self.SETTINGS['url_include_day']:
                 if post.day not in self.years[year][m]:
                     self.years[year][m].append(post.day)
-                
+
             # Archives
             d = year
             if d not in self.archives:
@@ -225,9 +228,10 @@ class Generator(object):
         for post in self.posts:
             # Save the thing
             b = post.slug + '.html'
-            
+
             if self.SETTINGS['url_include_day']:
-                m = os.path.join(self.DEPLOY, post.year, post.month, post.day, b)
+                m = os.path.join(self.DEPLOY, post.year, post.month,
+                        post.day, b)
             else:
                 m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
@@ -268,20 +272,19 @@ class Generator(object):
             m = os.path.join(self.DEPLOY, k)
             if not os.path.exists(m):
                 os.mkdir(m)
-                
+
             months = self.years[k]
             for month in months:
                 m = os.path.join(self.DEPLOY, k, month)
                 if not os.path.exists(m):
                     os.mkdir(m)
-                
+
                 if self.SETTINGS['url_include_day']:
                     days = self.years[k][month]
                     for day in days:
                         m = os.path.join(self.DEPLOY, k, month, day)
                         if not os.path.exists(m):
                             os.mkdir(m)
-                
 
     def make_index_page(self):
         """
@@ -307,7 +310,7 @@ class Generator(object):
 
     def make_atom(self):
         """
-        Create an atom feed 
+        Create an atom feed
         """
         m = os.path.join(self.DEPLOY, 'atom.xml')
         if self.SETTINGS['posts_per_page'] == 0:
@@ -344,8 +347,8 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.categories[k]
-                contents = self.render(self.CATEGORY, self._v({'category': k, 'posts':
-                    posts}))
+                contents = self.render(self.CATEGORY,
+                        self._v({'category': k, 'posts': posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
@@ -365,8 +368,8 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.archives[k]
-                contents = self.render(self.ARCHIVE, self._v({'year': k, 'posts':
-                    posts}))
+                contents = self.render(self.ARCHIVE,
+                        self._v({'year': k, 'posts': posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
@@ -383,7 +386,7 @@ class Generator(object):
             return
         print 'Creating pagination...'
         num = len(self.posts)
-        pages = num/per
+        pages = num / per
 
         m = os.path.join(self.DEPLOY, 'page')
         if not os.path.exists(m):
@@ -395,22 +398,22 @@ class Generator(object):
                 prev = '/page/%d/' % x
 
             if x < pages:
-                next = '/page/%d/' % int(x+1)
+                next = '/page/%d/' % int(x + 1)
             else:
                 next = None
 
-            n = per*x
-            p = self.posts[n:n+per]
+            n = per * x
+            p = self.posts[n:n + per]
 
             v = {
-                'page': x+1,
+                'page': x + 1,
                 'posts': p,
                 'prev': prev,
-                'total': pages+1,
+                'total': pages + 1,
                 'next': next
             }
 
-            folder = self._get_page_str(x, pages+1)
+            folder = self._get_page_str(x, pages + 1)
 
             e = os.path.join(m, folder)
             if not os.path.exists(e):
@@ -419,7 +422,7 @@ class Generator(object):
             contents = self.render(self.PAGED, self._v(v))
             c = os.path.join(e, "index.html")
             self._write_to_file(c, contents)
-            
+
     def make_about_page(self):
         print 'Creating about page...'
         files = os.listdir(self.ROOT)

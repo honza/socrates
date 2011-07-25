@@ -22,7 +22,7 @@ class File(object):
 
     def __init__(self, path, context):
 
-        self.context = context # site wide config
+        self.context = context  # site wide config
         self.path = path
 
         self.filename = os.path.basename(path)
@@ -69,7 +69,7 @@ class File(object):
         end = False
         conf = ""
         for x in f:
-            if x.startswith('-'*79):
+            if x.startswith('-' * 79):
                 if not start:
                     start = True
                 else:
@@ -93,7 +93,7 @@ class File(object):
         p = Processor(self.path, self.context, 'html', h)
         self.contents = p.content
         self.config = p.metadata
-        
+
         d = datetime.strptime(
                 self.config['date'],
                 '%Y-%m-%d %H:%M'
@@ -108,7 +108,6 @@ class File(object):
             pass
 
         self.config['date'] = d
-
 
     def _process_contents(self, text):
         """
@@ -166,19 +165,20 @@ class Post(File):
         self.atom_date = self._get_atom_date(self.config['date'])
 
         self.slug = slugify(self.config['title'])
-        
+
         if context['append_slash']:
             url_template = '%s/%s/%s/'
         else:
             url_template = '%s/%s/%s'
-        
+
         if context['url_include_day']:
             url_template = '%s/' + url_template
-            self.url = url_template % (self.year, self.month, self.day, self.slug,)
+            self.url = url_template % (self.year, self.month, self.day,
+                    self.slug,)
         else:
             self.url = url_template % (self.year, self.month, self.slug,)
 
-        categories = self.config.get('categories', ['Uncategorized',])
+        categories = self.config.get('categories', ['Uncategorized'])
         self.categories = []
         for c in categories:
             v = {

@@ -5,10 +5,11 @@ import shutil
 from optparse import OptionParser
 import socrates
 
+
 def main():
     usage = "Usage: socrates.py [options] path"
     parser = OptionParser(usage=usage)
-    parser.add_option('-i', '--init', action='store_true', 
+    parser.add_option('-i', '--init', action='store_true',
         help="Create a new blog.")
 
     parser.add_option('-g', '--generate', action='store_true',
@@ -23,7 +24,7 @@ def main():
         return
     try:
         path = args[0]
-        if not path.startswith(( '/', '~/' )):
+        if not path.startswith(('/', '~/')):
             path = os.path.join(os.getcwd(), path)
     except IndexError:
         path = os.getcwd()
@@ -37,7 +38,7 @@ def main():
             ), 'themes')
         try:
             shutil.copytree(
-                    os.path.join(temp_path, 'default'), 
+                    os.path.join(temp_path, 'default'),
                     path)
         except OSError, e:
             print "The '%s' directory already exists." % e
@@ -48,7 +49,7 @@ def main():
     if options.run:
         import SimpleHTTPServer
         import SocketServer
-        
+
         class FixRedirectHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             def do_GET(self):
                 if self.path.endswith("/"):
@@ -65,16 +66,16 @@ def main():
             PORT = 8000
             Handler = FixRedirectHandler
             httpd = SocketServer.TCPServer(("", PORT), Handler, False)
-            
+
             print "serving at port", PORT
             try:
                 httpd.allow_reuse_address = True
-                httpd.server_bind() 
-                httpd.server_activate() 
+                httpd.server_bind()
+                httpd.server_activate()
                 httpd.serve_forever()
             except KeyboardInterrupt:
                 print '\nAll done!'
-        else:    
+        else:
             print "The '%s' directory doesn't exist." % p
 
 main()

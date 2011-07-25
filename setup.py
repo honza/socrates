@@ -1,6 +1,6 @@
 from setuptools import setup
 
-description =  'Socrates is a simple static site generator.'
+description = 'Socrates is a simple static site generator.'
 long_desc = open('README.rst').read()
 
 setup(

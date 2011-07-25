@@ -54,9 +54,10 @@ class Pygments(Directive):
         # take an arbitrary option if more than one is given
         if self.options and VARIANTS[self.options.keys()[0]]:
             self.formatter = VARIANTS[self.options.keys()[0]]
-        
+
         parsed = highlight(u'\n'.join(self.content), lexer, self.formatter)
         return [nodes.raw('', parsed, format='html')]
+
 
 class Processor(object):
 
@@ -82,14 +83,15 @@ class Processor(object):
         def depart_field_body(self, node):
             pass
 
+    def __init__(self, filename, global_settings, output='html',
+            header_level=2):
 
-    def __init__(self, filename, global_settings, output='html', header_level=2):
-        self.settings = global_settings 
+        self.settings = global_settings
         self.pygments_builder()
-        
+
         directives.register_directive('sourcecode', self.pygmenter)
         directives.register_directive('code-block', self.pygmenter)
-        
+
         self.filename = filename
         if output not in self.allowed_types:
             raise NotImplementedError("Can't render '%s'." % output)
@@ -101,11 +103,12 @@ class Processor(object):
         self.run()
 
     def pygments_builder(self):
-        
+
         self.pygmenter = Pygments
         if self.settings['pygments']:
             print self.settings['pygments']
-            self.pygmenter.formatter = HtmlFormatter(**self.settings['pygments'])
+            self.pygmenter.formatter = HtmlFormatter(
+                **self.settings['pygments'])
 
     def render_node_to_html(self, document, node):
         if self.output == 'html':
@@ -114,7 +117,7 @@ class Processor(object):
             visitor = self.LatexTranslator(document)
         else:
             pass
-        
+
         node.walkabout(visitor)
         return visitor.astext()
 
@@ -125,7 +128,8 @@ class Processor(object):
                 if element.tagname == 'field':
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
-                    value = self.render_node_to_html(self.pub.document, body_elem)
+                    value = self.render_node_to_html(self.pub.document,
+                            body_elem)
                 else:
                     name = element.tagname
                     value = element.astext()
@@ -135,7 +139,8 @@ class Processor(object):
         extra_params = {
             'initial_header_level': self.header_level
         }
-        pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
+        pub = docutils.core.Publisher(
+            destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', self.output)
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=self.filename)
