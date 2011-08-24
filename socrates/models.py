@@ -3,7 +3,7 @@ from datetime import datetime
 
 import yaml
 
-from processors import Processor
+from processors import Processor, HtmlPunctuationMaker
 from utils import slugify
 from exceptions import ConfigurationError
 
@@ -130,6 +130,8 @@ class File(object):
         if p == 'markdown':
             from markdown import markdown
             html = markdown(unicode(text, "utf-8"))
+            maker = HtmlPunctuationMaker(html)
+            html = maker.html
         elif p == 'textile':
             try:
                 from textile import textile
@@ -138,6 +140,8 @@ class File(object):
                 print 'Please install textile to continue'
                 sys.exit(1)
             html = textile(text)
+            maker = HtmlPunctuationMaker(html)
+            html = maker.html
         elif p == 'html':
             html = text
         else:
