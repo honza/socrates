@@ -4,10 +4,10 @@ Socrates
 
 Socrates is a simple static site generator. It's geared towards blogs. You
 write your posts in your favorite plain text to HTML language (e.g. Markdown,
-textile) and save them as text files on your harddrive. Socrates then takes
-them, and creates a full HTML site for you. For free, you will get a home page
-which lists latest posts, single post pages, category pages, archive pages,
-an about page and an atom feed.
+textile, reStructuredText) and save them as text files on your harddrive.
+Socrates then takes them, and creates a full HTML site for you. For free, you
+will get a home page which lists latest posts, single post pages, category
+pages, archive pages, an about page and an atom feed.
 
 Features
 -------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ Features
 * YAML configuration
 * Atom feed
 * Github pages compatible
+* Real HTML punctuation
 
 Usage
 -------------------------------------------------------------------------------
@@ -146,7 +147,8 @@ Socrates is licensed under the terms of the 3-clause BSD license.
 Contribute
 -------------------------------------------------------------------------------
 
-All contributions are welcome. 
+All contributions are welcome. Please do ask if a feature is wanted before
+starting work to avoid wasting your time.
 
 Bugs & Issues
 -------------------------------------------------------------------------------
@@ -156,7 +158,8 @@ Please report all bugs on Github.
 Authors
 -------------------------------------------------------------------------------
 
-Socrates was originally written by Honza Pokorny.
+Socrates was originally written by Honza Pokorny. For a complete list of
+authors, please see the AUTHORS file.
 
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
