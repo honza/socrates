@@ -100,3 +100,14 @@ you add in there will be made available in your templates' context.
     Whether or not you want pygments to output a ``pygments.css`` file in your
     build directory for css. If set to ``false`` it will output the file.
 
+.. option:: punctuation
+
+    Whether common punctuation characters should be replaced with proper HTML
+    characters. Defaults to ``False``. Currently supports:
+
+        * em dash
+        * en dash
+        * double quotes
+        * single quotes
+        * apostrophe
+
