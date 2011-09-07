@@ -4,3 +4,6 @@
 dist/
 build/
 socrates.egg-info/
+.hg/
+.hgignore
+docs/_build/
