@@ -69,6 +69,8 @@ Installation
 
 First, set up your virtual environment and pip install Socrates.
 
+**Note**: pip install socrates is currently broken, working on a fix
+
 ::
 
     virtualenv env --no-site-packages
