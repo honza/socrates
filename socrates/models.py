@@ -48,13 +48,13 @@ class File(object):
         Decide what file type the current file is.
         """
         is_rst = False
-
         if self.context['text_processor'] == 'extension':
             file_type = self._get_type()
             is_rst = file_type == 'rst'
 
         if self.context['text_processor'] in ['markdown', 'textile', 'html']:
             is_rst = False
+            self.file_type = self.context['text_processor']
 
         if is_rst:
             self._parse_rst()
