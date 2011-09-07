@@ -75,11 +75,15 @@ First, set up your virtual environment and pip install Socrates.
     source env/bin/activate
     pip install socrates
 
-Or, to get the latest code, you can install from Github.
+Or, to get the latest code, you can install from Github or Bitbucket.
 
 ::
 
     pip install -e git://github.com/honza/socrates.git#egg=socrates
+    pip install -e hg+https://honza@bitbucket.org/honza/socrates#egg=socrates
+
+Please note that the official repo is on Github and the Bitbucket repo is a
+mirror. However, pull requests are accepted from both.
 
 The next step is to install your templates. At the moment, you can choose
 between `Django templates`_ and `Jinja2 templates`_. The default theme uses
