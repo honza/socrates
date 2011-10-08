@@ -36,6 +36,15 @@ VARIANTS = {
     # 'linenos': HtmlFormatter(noclasses=INLINESTYLES, linenos=True),
 }
 
+def raw_html(name, args, options, content, lineno, contentOffset, blockText, state, stateMachine):
+    """
+    Simply render the input html as html.
+    """
+    if content == "":
+        return
+    return [nodes.raw(text='\n'.join(content), format='html')]
+raw_html.content = True
+directives.register_directive('raw_html', raw_html)
 
 class Pygments(Directive):
     required_arguments = 1
