@@ -31,7 +31,8 @@ DEFAULTS = {
     'skip_categories': False,
     'inline_css': False,
     'pygments': {},
-    'punctuation': False
+    'punctuation': False,
+    'sitemap_urls': ['about',]
 }
 
 
@@ -52,6 +53,7 @@ class Generator(object):
     ARCHIVE = 'archive.html'
     PAGED = 'index_paged.html'
     ATOM = 'atom.html'
+    SITEMAP = 'sitemap.xml'
 
     # Directories
     ROOT = None
@@ -101,6 +103,7 @@ class Generator(object):
         # Create html files
         self.make_index_page()
         self.make_atom()
+        self.make_sitemap()
 
         if not self.SETTINGS['skip_categories']:
             self.make_category_pages()
@@ -324,6 +327,17 @@ class Generator(object):
             extra}))
         self._write_to_file(m, contents)
 
+    def make_sitemap(self):
+        """
+        Generate a sitemap.
+        """
+        m = os.path.join(self.DEPLOY, 'sitemap.xml')
+        posts = self.posts
+        contents = self.render(self.SITEMAP, self._v({
+            'posts': posts,
+            'now': self._get_atom_date()}))
+        self._write_to_file(m, contents)
+        
     def make_atom(self):
         """
         Create an atom feed

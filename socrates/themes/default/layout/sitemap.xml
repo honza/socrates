@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+  <loc>http://{{ url }}/</loc>
+  <lastmod>{{ now }}</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+{% for static_url in sitemap_urls %}
+<url>
+  <loc>http://{{ url }}/{{ static_url }}</loc>
+  <lastmod>{{ now }}</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+{% endfor %}
+{% for post in posts %}
+<url>
+  <loc>http://{{ url }}/{{ post.url }}</loc>
+  <lastmod>{{ post.atom_date }}</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+{% endfor %}
+</urlset>
