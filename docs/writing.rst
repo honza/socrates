@@ -56,6 +56,11 @@ Options
 
     The title of the post
 
+.. option:: slug (optional)
+
+    The url-ized transformation of your title. This is useful if you need to
+    maintain an existing url format.
+
 .. option:: date
 
     Publish date; ``YYYY-MM-DD HH:MM``
