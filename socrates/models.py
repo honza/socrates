@@ -174,8 +174,10 @@ class Post(File):
         self.day = self.config['date'].strftime("%d")
         self.date = self.config['date'].strftime(self.context['date_format'])
         self.atom_date = self._get_atom_date(self.config['date'])
-
-        self.slug = slugify(self.config['title'])
+        if self.config.get('slug'):
+            self.slug = self.config['slug']
+        else:
+            self.slug = slugify(self.config['title'])
 
         if context['append_slash']:
             url_template = '%s/%s/%s/'
