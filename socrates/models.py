@@ -207,7 +207,7 @@ class Post(File):
 
     def _get_atom_date(self, date):
         d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
-        return d[:-2] + ':' + d[-2:]
+        return d + "Z"
 
 
 class Page(File):
