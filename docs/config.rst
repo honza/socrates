@@ -111,3 +111,7 @@ you add in there will be made available in your templates' context.
         * single quotes
         * apostrophe
 
+    .. note::
+        This was broken and was removed as of 0.7.0. We're currently exploring
+        other options.
+

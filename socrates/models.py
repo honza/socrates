@@ -3,7 +3,7 @@ from datetime import datetime
 
 import yaml
 
-from processors import Processor, HtmlPunctuationMaker
+from processors import Processor
 from utils import slugify, highlight_code
 from exceptions import ConfigurationError
 
@@ -141,8 +141,6 @@ class File(object):
                 print 'Please install textile to continue'
                 sys.exit(1)
             html = textile(text)
-            maker = HtmlPunctuationMaker(html)
-            html = maker.html
         elif p == 'html':
             html = text
         else:

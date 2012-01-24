@@ -31,7 +31,6 @@ DEFAULTS = {
     'skip_categories': False,
     'inline_css': False,
     'pygments': {},
-    'punctuation': False,
     'sitemap_urls': ['about',]
 }
 
