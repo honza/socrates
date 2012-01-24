@@ -1,6 +1,10 @@
-==== 0.7.0 (unreleased) ====
-	- Punctuation
+==== 0.7.0 (2012-01-24) ====
 	- Better exception handling
+	- Support for pygments in Markdown
+	- Use misaka for markdown
+	- Add sitemap logic (thurloat)
+	- Custom slugs (thurloat)
+	- raw html renderer (thurloat)
 
 ==== 0.6.4 (2011-09-07) ====
 	- Packaging
