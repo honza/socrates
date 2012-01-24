@@ -4,7 +4,7 @@ from datetime import datetime
 import yaml
 
 from processors import Processor, HtmlPunctuationMaker
-from utils import slugify
+from utils import slugify, highlight_code
 from exceptions import ConfigurationError
 
 EXTENSIONS = {
@@ -128,10 +128,11 @@ class File(object):
         p = p.lower()
 
         if p == 'markdown':
-            from markdown import markdown
-            html = markdown(unicode(text, "utf-8"))
-            maker = HtmlPunctuationMaker(html)
-            html = maker.html
+            import misaka
+            html = misaka.html(unicode(text, "utf-8"),
+                render_flags=misaka.HTML_GITHUB_BLOCKCODE,
+                extensions=misaka.EXT_FENCED_CODE)
+            html = highlight_code(html)
         elif p == 'textile':
             try:
                 from textile import textile

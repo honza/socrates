@@ -9,7 +9,7 @@ setup(
     url='http://honza.github.com/socrates/',
     install_requires=[
         'pyYAML',
-        'markdown',
+        'misaka',
         'django',
         'jinja2',
         'docutils',
