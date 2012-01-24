@@ -7,7 +7,15 @@ setup(
     name='socrates',
     version='0.6.4',
     url='http://honza.github.com/socrates/',
-    install_requires=['pyYAML', 'markdown'],
+    install_requires=[
+        'pyYAML',
+        'markdown',
+        'django',
+        'jinja2',
+        'docutils',
+        'pygments',
+        'textile'
+    ],
     description=description,
     long_description=long_desc,
     author='Honza Pokorny',
