@@ -3,3 +3,7 @@ include AUTHORS
 include LICENSE
 include MANIFEST.in
 include CHANGELOG
+include *.html
+include *.css
+include *.md
+include *.yaml
