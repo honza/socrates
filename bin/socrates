@@ -41,7 +41,7 @@ def main():
                     os.path.join(temp_path, 'default'),
                     path)
         except OSError, e:
-            print "The '%s' directory already exists." % e
+            print e
 
     if options.generate:
         socrates.Generator(path)
