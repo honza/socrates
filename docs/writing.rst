@@ -74,6 +74,47 @@ Options
     You can override the default template that the post is going to be rendered
     with.
 
+Syntax highlighting
+-------------------
+
+Socrates has built-in support for syntax highlighting via `pygments`_. It's
+only available for the markdown and reStructuredText flavors.
+
+Markdown
+~~~~~~~~
+
+For markdown files, we use the same syntax as Github for specifying code
+blocks.
+
+.. code-block:: text
+
+    Paragraph text
+
+    ```python
+    import datetime
+    print datetime.datetime.utcnow()
+    ```
+
+    More text
+
+reStructuredText
+~~~~~~~~~~~~~~~~
+
+In reStructuredText, you can use the ``code-block`` or ``sourcecode``
+directives.
+
+.. code-block:: rst
+
+    Paragraph text
+
+    .. code-block:: python
+
+        import datetime
+        print datetime.datetime.utcnow()
+
+    More text
+
 
 .. _YAML: http://www.yaml.org/ 
 .. _Docutils: http://docutils.sourceforge.net/
+.. _pygments: http://pygments.org/
