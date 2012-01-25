@@ -62,9 +62,10 @@ class Generator(object):
     # Global, site-wide settings
     SETTINGS = None
 
-    def __init__(self, directory):
+    def __init__(self, directory, silent=False):
         m = os.getcwd()
         self.ROOT = os.path.join(m, directory)
+        self.silent = silent
 
         if not os.path.exists(self.ROOT):
             print "The '%s' directory doesn't exist." % directory
@@ -120,7 +121,7 @@ class Generator(object):
                 os.path.join(self.DEPLOY, 'media', 'pygments.css'),
                 css_content)
 
-        print "Success!"
+        self.log("Success!")
 
     def init_template_renderer(self):
         """
@@ -141,6 +142,14 @@ class Generator(object):
         representation of a page/post.
         """
         return self.template.render(template, values)
+
+    def log(self, text):
+        """
+        A thin wrapper around the ``print`` statement to allow silencing of all
+        non-error output.
+        """
+        if not self.silent:
+            print text
 
     def _get_page_str(self, current, total):
         """
@@ -210,7 +219,7 @@ class Generator(object):
         """
         Collect all the necessary information about posts.
         """
-        print 'Processing posts...'
+        self.log('Processing posts...')
         for post in self.posts:
             # Get categories
             self._get_post_cats(post)
@@ -242,7 +251,7 @@ class Generator(object):
         self.save_posts()
 
     def save_posts(self):
-        print 'Saving posts...'
+        self.log('Saving posts...')
         for post in self.posts:
             # Save the thing
             b = post.slug + '.html'
@@ -261,7 +270,7 @@ class Generator(object):
             content = self.render(t, self._v({'post': post}))
 
             # Print filename to show progress
-            print post.filename
+            self.log(post.filename)
 
             self._write_to_file(m, content)
 
@@ -284,7 +293,7 @@ class Generator(object):
                 07
                   30
         """
-        print 'Creating directories...'
+        self.log('Creating directories...')
         keys = self.years.keys()
         for k in keys:
             m = os.path.join(self.DEPLOY, k)
@@ -385,7 +394,7 @@ class Generator(object):
         """
         Make archive pages. Only by year.
         """
-        print 'Creating archives...'
+        self.log('Creating archives...')
         keys = self.archives.keys()
         if len(keys) != 0:
             # Make category dir
@@ -413,7 +422,7 @@ class Generator(object):
         if per == 0:
             # Skip pagination if all posts are on index page
             return
-        print 'Creating pagination...'
+        self.log('Creating pagination...')
         num = len(self.posts)
         pages = num / per
 
@@ -453,7 +462,7 @@ class Generator(object):
             self._write_to_file(c, contents)
 
     def make_about_page(self):
-        print 'Creating about page...'
+        self.log('Creating about page...')
         files = os.listdir(self.ROOT)
         path = ""
         for f in files:

@@ -18,6 +18,9 @@ def main():
     parser.add_option('-r', '--run', action='store_true',
             help="Run a simple server.")
 
+    parser.add_option('-s', '--silent', action='store_true',
+            help="Keep output to a minimum")
+
     options, args = parser.parse_args()
 
     if len(args) > 1:
@@ -44,7 +47,7 @@ def main():
             print e
 
     if options.generate:
-        socrates.Generator(path)
+        socrates.Generator(path, options.silent)
 
     if options.run:
         import SimpleHTTPServer
