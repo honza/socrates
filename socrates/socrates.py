@@ -31,7 +31,8 @@ DEFAULTS = {
     'skip_categories': False,
     'inline_css': False,
     'pygments': {},
-    'sitemap_urls': ['about',]
+    'sitemap_urls': ['about',],
+    'punctuation': False
 }
 
 
@@ -66,8 +67,6 @@ class Generator(object):
         m = os.getcwd()
         self.ROOT = os.path.join(m, directory)
         self.silent = silent
-
-        self.ROOT = 'haha'
 
         if not os.path.exists(self.ROOT):
             sys.stderr.write("The '%s' directory doesn't exist.\n" % directory)

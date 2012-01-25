@@ -1,11 +1,10 @@
 import os
 from datetime import datetime
-
 import yaml
-
 from processors import Processor
 from utils import slugify, highlight_code
 from exceptions import ConfigurationError
+from typography import typogrify
 
 EXTENSIONS = {
     '.md': 'markdown',
@@ -34,6 +33,9 @@ class File(object):
             self.title = self.config['title']
         except KeyError:
             raise ConfigurationError
+
+        if self.context['punctuation']:
+            self.contents = typogrify(self.contents)
 
     def _get_type(self):
         name, extension = os.path.splitext(self.path)
