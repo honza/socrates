@@ -67,8 +67,10 @@ class Generator(object):
         self.ROOT = os.path.join(m, directory)
         self.silent = silent
 
+        self.ROOT = 'haha'
+
         if not os.path.exists(self.ROOT):
-            print "The '%s' directory doesn't exist." % directory
+            sys.stderr.write("The '%s' directory doesn't exist.\n" % directory)
             return
         # Set up deploy directory
         self.DEPLOY = os.path.join(self.ROOT, 'deploy')
@@ -84,8 +86,8 @@ class Generator(object):
         self.SETTINGS = self._get_settings()
         if self.SETTINGS['text_processor'] not in AVAILABLE_EXTENSIONS:
             ext = self.SETTINGS['text_processor']
-            print "WARNING: %s isn't a recognizeed text processor." % ext
-            print 'Exiting...'
+            sys.stderr("WARNING: %s isn't a recognizeed text processor.\n"
+                    % ext)
             sys.exit(1)
         self.init_template_renderer()
 
@@ -210,8 +212,8 @@ class Generator(object):
                 try:
                     self.posts.append(Post(p, self.SETTINGS))
                 except ConfigurationError:
-                    print "WARNING: %s isn't configured properly." % filename
-                    print "Exiting..."
+                    sys.stderr.write("WARNING: %s isn't configured properly.\n"
+                            % filename)
                     sys.exit(1)
         self.posts.reverse()
 

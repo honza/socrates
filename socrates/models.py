@@ -134,12 +134,7 @@ class File(object):
                 extensions=misaka.EXT_FENCED_CODE)
             html = highlight_code(html)
         elif p == 'textile':
-            try:
-                from textile import textile
-            except ImportError:
-                import sys
-                print 'Please install textile to continue'
-                sys.exit(1)
+            from textile import textile
             html = textile(text)
         elif p == 'html':
             html = text

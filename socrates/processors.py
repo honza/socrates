@@ -1,10 +1,4 @@
-try:
-    import docutils
-except ImportError:
-    import sys
-    print 'You must install docutils to use reStructuredText'
-    print 'pip install docutils'
-    sys.exit(1)
+import docutils
 
 import docutils.core
 from docutils.writers.html4css1 import HTMLTranslator
@@ -12,16 +6,10 @@ from docutils.writers.latex2e import LaTeXTranslator
 from docutils import nodes
 from docutils.parsers.rst import directives, Directive
 
-try:
-    from pygments import highlight
-    from pygments.lexers import get_lexer_by_name, TextLexer
-    from pygments.formatters import HtmlFormatter
-    from pygments.formatters import LatexFormatter
-except ImportError:
-    import sys
-    print 'You must install pygments to use reStructuredText'
-    print 'pip install pygments'
-    sys.exit(1)
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, TextLexer
+from pygments.formatters import HtmlFormatter
+from pygments.formatters import LatexFormatter
 
 # Set to True if you want inline CSS styles instead of classes
 INLINESTYLES = False
@@ -115,7 +103,6 @@ class Processor(object):
 
         self.pygmenter = Pygments
         if self.settings['pygments']:
-            print self.settings['pygments']
             self.pygmenter.formatter = HtmlFormatter(
                 **self.settings['pygments'])
 

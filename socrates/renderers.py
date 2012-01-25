@@ -4,14 +4,9 @@ import os
 class DjangoRenderer(object):
 
     def __init__(self, path):
-        try:
-            from django.conf import settings
-            from django.template.loader import render_to_string
-        except ImportError:
-            import sys
-            print "You have to install django to continue."
-            print "Run: pip install django"
-            sys.exit(1)
+        from django.conf import settings
+        from django.template.loader import render_to_string
+
         path = os.path.abspath(path)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
                 TEMPLATE_DIRS=[path])
@@ -24,13 +19,7 @@ class DjangoRenderer(object):
 class Jinja2Renderer(object):
 
     def __init__(self, path):
-        try:
-            from jinja2 import Environment, FileSystemLoader
-        except ImportError:
-            import sys
-            print "You have to install jinja2 to continue."
-            print "Run: pip install jinja2"
-            sys.exit(1)
+        from jinja2 import Environment, FileSystemLoader
         self.env = Environment(loader=FileSystemLoader(path))
 
     def render(self, template, values):
