@@ -103,7 +103,7 @@ you add in there will be made available in your templates' context.
 .. option:: punctuation
 
     Whether common punctuation characters should be replaced with proper HTML
-    characters. Defaults to ``False``. Currently supports:
+    characters. Defaults to ``False``. E.g.:
 
         * em dash
         * en dash
@@ -111,7 +111,5 @@ you add in there will be made available in your templates' context.
         * single quotes
         * apostrophe
 
-    .. note::
-        This was broken and was removed as of 0.7.0. We're currently exploring
-        other options.
-
+    This functionality is provided by ``smartypants`` and ``typogrify`` and
+    only works in Django at this time.
