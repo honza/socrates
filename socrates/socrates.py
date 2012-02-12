@@ -120,7 +120,6 @@ class Generator(object):
             self.make_archive_pages()
 
         self.make_pagination()
-        self.make_about_page()
 
         if not self.SETTINGS['inline_css']:
             from pygments.formatters import HtmlFormatter
@@ -506,20 +505,3 @@ class Generator(object):
             contents = self.render(self.PAGED, self._v(v))
             c = os.path.join(e, "index.html")
             self._write_to_file(c, contents)
-
-    def make_about_page(self):
-        self.log('Creating about page...')
-        files = os.listdir(self.ROOT)
-        path = ""
-        for f in files:
-            if f.startswith('about.'):
-                path = f
-                break
-        path = os.path.join(self.ROOT, path)
-        about = Page(path, self.SETTINGS)
-        v = {'page': about}
-
-        c = os.path.join(self.DEPLOY, 'about.html')
-
-        contents = self.render(self.PAGE, self._v(v))
-        self._write_to_file(c, contents)
