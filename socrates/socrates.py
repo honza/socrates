@@ -59,6 +59,7 @@ class Generator(object):
     ROOT = None
     DEPLOY = None
     POSTS = None
+    PAGES = None
 
     # Global, site-wide settings
     SETTINGS = None
@@ -82,6 +83,8 @@ class Generator(object):
                 os.path.join(self.DEPLOY, 'media'))
 
         self.POSTS = os.path.join(self.ROOT, 'posts')
+        self.PAGES = os.path.join(self.ROOT, 'pages')
+
         self.SETTINGS = self._get_settings()
         if self.SETTINGS['text_processor'] not in AVAILABLE_EXTENSIONS:
             ext = self.SETTINGS['text_processor']
@@ -91,12 +94,17 @@ class Generator(object):
         self.init_template_renderer()
 
         self.posts = []
+        self.pages = []
         self.categories = {}
         self.years = {}
         self.archives = {}
 
         self.load_posts()
         self.process_posts()
+
+        if os.path.exists(self.PAGES):
+            self.load_pages()
+            self.process_pages()
 
         self.SETTINGS = dict(self.SETTINGS, **{'categories': self.categories})
         self.SETTINGS = dict(self.SETTINGS, **{'years': self.years})
@@ -216,6 +224,21 @@ class Generator(object):
                     sys.exit(1)
         self.posts.reverse()
 
+    def load_pages(self):
+        """
+        Get all files from the posts directory, create Post instances and add
+        them to the self.posts list.
+        """
+        for filename in os.listdir(self.PAGES):
+            if not filename.startswith('.') and not filename.startswith('_'):
+                p = os.path.join(self.PAGES, filename)
+                try:
+                    self.pages.append(Page(p, self.SETTINGS))
+                except ConfigurationError:
+                    sys.stderr.write("WARNING: %s isn't configured properly.\n"
+                            % filename)
+                    sys.exit(1)
+
     def process_posts(self):
         """
         Collect all the necessary information about posts.
@@ -251,6 +274,9 @@ class Generator(object):
         self.make_post_directories()
         self.save_posts()
 
+    def process_pages(self):
+        self.save_pages()
+
     def save_posts(self):
         self.log('Saving posts...')
         for post in self.posts:
@@ -273,6 +299,25 @@ class Generator(object):
             # Print filename to show progress
             self.log(post.filename)
 
+            self._write_to_file(m, content)
+
+    def save_pages(self):
+        self.log('Saving pages...')
+        for page in self.pages:
+            # Save the thing
+            b = page.slug + '.html'
+
+            m = os.path.join(self.DEPLOY, b)
+
+            if 'template' in page.config.keys():
+                t = page.config['template']
+            else:
+                t = self.PAGE
+
+            content = self.render(t, self._v({'page': page}))
+
+            # Print filename to show progress
+            self.log(page.filename)
             self._write_to_file(m, content)
 
     def make_post_directories(self):

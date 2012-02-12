@@ -210,3 +210,7 @@ class Page(File):
 
     def __init__(self, path, context):
         super(Page, self).__init__(path, context)
+        if self.config.get('slug'):
+            self.slug = self.config['slug']
+        else:
+            self.slug = slugify(self.config['title'])
