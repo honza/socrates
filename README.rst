@@ -167,7 +167,12 @@ Authors
 Socrates was originally written by Honza Pokorny. For a complete list of
 authors, please see the AUTHORS file.
 
+In the wild
+-------------------------------------------------------------------------------
+
+* `Honza's blog <http://honza.ca>`_
+* `Adam's blog <http://thurloat.com>`_
+
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
 .. _Sphinx: http://sphinx.pocoo.org/
-.. _documentation: http://readthedocs.org/docs/socrates/en/latest/index.html
