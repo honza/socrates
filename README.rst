@@ -176,3 +176,4 @@ In the wild
 .. _Django templates: https://docs.djangoproject.com/en/1.3/#the-template-layer
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
 .. _Sphinx: http://sphinx.pocoo.org/
+.. _documentation: http://readthedocs.org/docs/socrates/en/latest/index.html
