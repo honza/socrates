@@ -1,3 +1,10 @@
+==== 0.8.0 (2012-02-12) ====
+	- Add silent flag
+	- Write errors to stderr
+	- Add punctuation via smartypants and typogrify
+	- Add page processing
+	- Update theme layout
+
 ==== 0.7.0 (2012-01-24) ====
 	- Better exception handling
 	- Support for pygments in Markdown
