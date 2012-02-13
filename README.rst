@@ -32,6 +32,9 @@ This will create a ``blog`` directory with a simple blog structure::
     blog
         posts
             2010-your-post.md
+        pages
+            about.md
+            contact.md
         layout
             index.html
             single.html
@@ -40,7 +43,6 @@ This will create a ``blog`` directory with a simple blog structure::
         media
             style.css
         config.yaml
-        about.md
 
 The ``posts`` directory is where you will place your posts files. Anything
 prefixed with ``_`` or ``.`` will be ignored. ``layout`` is your basic theme or
