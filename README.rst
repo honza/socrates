@@ -155,7 +155,7 @@ starting work to avoid wasting your time.
 Bugs & Issues
 -------------------------------------------------------------------------------
 
-Please report all bugs on Github.
+Please report all bugs on Github. Mailing list: `socrates@librelist.com`_.
 
 Authors
 -------------------------------------------------------------------------------
@@ -173,3 +173,4 @@ In the wild
 .. _Jinja2 templates: http://jinja.pocoo.org/docs/
 .. _Sphinx: http://sphinx.pocoo.org/
 .. _documentation: http://readthedocs.org/docs/socrates/en/latest/index.html
+.. _socrates@librelist.com: mailto:socrates@librelist.com
