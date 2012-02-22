@@ -11,8 +11,8 @@ from pygments.lexers import get_lexer_by_name, TextLexer
 from pygments.formatters import HtmlFormatter
 from pygments.formatters import LatexFormatter
 
-from misaka import HtmlRenderer
-from utils import highlight_code
+from misaka import HtmlRenderer, Markdown, EXT_FENCED_CODE
+from textile import textile
 
 # Set to True if you want inline CSS styles instead of classes
 INLINESTYLES = False
@@ -60,6 +60,19 @@ class Pygments(Directive):
 
 
 class Processor(object):
+    """
+    Processor subclass. Markdown, textile etc processors should inherit
+    from this and override the ``render(text)`` method
+
+    Note: ``RstProcessor`` works completely differently and isn't a subclass of
+    ``Processor`` at this time.
+    """
+
+    def render(self, text):
+        raise NotImplementedError
+
+
+class RstProcessor(object):
 
     allowed_types = ['html', 'latex', 'xetex']
 
@@ -159,7 +172,24 @@ class Processor(object):
         self.content = content
 
 
-class MarkdownProcessor(HtmlRenderer):
+class MarkdownProcessor(Processor):
 
-    def block_code(self, text, lang):
-        return highlight_code(lang, text)
+    class MisakaProcessor(HtmlRenderer):
+
+        def block_code(self, text, lang):
+            return self.highlight_code(lang, text)
+
+        def highlight_code(self, language, code):
+            return highlight(code, get_lexer_by_name(language), HtmlFormatter())
+
+    def __init__(self):
+        self.md = Markdown(self.MisakaProcessor(), EXT_FENCED_CODE)
+
+    def render(self, text):
+        return self.md.render(text)
+
+
+class TextileProcessor(Processor):
+
+    def render(self, text):
+        return textile(text)

@@ -1,8 +1,8 @@
 import os
 from datetime import datetime
 import yaml
-from processors import Processor
-from utils import slugify, highlight_code
+from processors import RstProcessor, MarkdownProcessor, TextileProcessor
+from utils import slugify
 from exceptions import ConfigurationError
 from typography import typogrify
 
@@ -96,7 +96,7 @@ class File(object):
             h = self.context['initial_header_level']
         except KeyError:
             h = 2
-        p = Processor(self.path, self.context, 'html', h)
+        p = RstProcessor(self.path, self.context, 'html', h)
         self.contents = p.content
         self.config = p.metadata
 
@@ -130,13 +130,11 @@ class File(object):
         p = p.lower()
 
         if p == 'markdown':
-            from misaka import Markdown, EXT_FENCED_CODE
-            from processors import MarkdownProcessor
-            md = Markdown(MarkdownProcessor(), EXT_FENCED_CODE)
-            html = md.render(unicode(text, 'utf-8'))
+            processor = MarkdownProcessor()
+            html = processor.render(text)
         elif p == 'textile':
-            from textile import textile
-            html = textile(text)
+            processor = TextileProcessor()
+            html = processor.render(text)
         elif p == 'html':
             html = text
         else:
