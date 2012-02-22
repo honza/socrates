@@ -130,11 +130,10 @@ class File(object):
         p = p.lower()
 
         if p == 'markdown':
-            import misaka
-            html = misaka.html(unicode(text, "utf-8"),
-                render_flags=misaka.HTML_GITHUB_BLOCKCODE,
-                extensions=misaka.EXT_FENCED_CODE)
-            html = highlight_code(html)
+            from misaka import Markdown, EXT_FENCED_CODE
+            from processors import MarkdownProcessor
+            md = Markdown(MarkdownProcessor(), EXT_FENCED_CODE)
+            html = md.render(unicode(text, 'utf-8'))
         elif p == 'textile':
             from textile import textile
             html = textile(text)

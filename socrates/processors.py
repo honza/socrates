@@ -11,6 +11,9 @@ from pygments.lexers import get_lexer_by_name, TextLexer
 from pygments.formatters import HtmlFormatter
 from pygments.formatters import LatexFormatter
 
+from misaka import HtmlRenderer
+from utils import highlight_code
+
 # Set to True if you want inline CSS styles instead of classes
 INLINESTYLES = False
 
@@ -154,3 +157,9 @@ class Processor(object):
             pass
 
         self.content = content
+
+
+class MarkdownProcessor(HtmlRenderer):
+
+    def block_code(self, text, lang):
+        return highlight_code(lang, text)
