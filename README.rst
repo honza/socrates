@@ -106,12 +106,6 @@ processor. You should specify the name of the text processor in
   - reStructuredText
   - HTML (unmodified text)
 
-By default, Socrates only installs the Markdown text processors. You can
-install the others with pip::
-
-    $ pip install textile
-    $ pip install docutils
-
 Development
 -------------------------------------------------------------------------------
 
