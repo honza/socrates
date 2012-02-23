@@ -1,7 +1,13 @@
 import os
 
 
-class DjangoRenderer(object):
+class BaseRenderer(object):
+
+    def render(self, template, values):
+        raise NotImplementedError
+
+
+class DjangoRenderer(BaseRenderer):
 
     def __init__(self, path):
         from django.conf import settings
@@ -16,7 +22,7 @@ class DjangoRenderer(object):
         return self._render(template, values)
 
 
-class Jinja2Renderer(object):
+class Jinja2Renderer(BaseRenderer):
 
     def __init__(self, path):
         from jinja2 import Environment, FileSystemLoader
