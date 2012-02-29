@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 import yaml
 from processors import RstProcessor, MarkdownProcessor, TextileProcessor
-from utils import slugify
+from utils import slugify, ligatures
 from exceptions import ConfigurationError
 from typography import typogrify
 
@@ -36,6 +36,9 @@ class File(object):
 
         if self.context['punctuation']:
             self.contents = typogrify(self.contents)
+
+        if self.context['ligatures']:
+            self.contents = ligatures(self.contents)
 
     def _get_type(self):
         name, extension = os.path.splitext(self.path)

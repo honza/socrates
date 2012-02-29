@@ -32,7 +32,8 @@ DEFAULTS = {
     'inline_css': False,
     'pygments': {},
     'sitemap_urls': ['about',],
-    'punctuation': False
+    'punctuation': False,
+    'ligatures': False
 }
 
 
