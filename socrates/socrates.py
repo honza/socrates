@@ -33,7 +33,8 @@ DEFAULTS = {
     'pygments': {},
     'sitemap_urls': ['about',],
     'punctuation': False,
-    'ligatures': False
+    'ligatures': False,
+    'deploy_dir': 'deploy'
 }
 
 
@@ -73,8 +74,9 @@ class Generator(object):
         if not os.path.exists(self.ROOT):
             sys.stderr.write("The '%s' directory doesn't exist.\n" % directory)
             return
+        self.SETTINGS = self._get_settings()
         # Set up deploy directory
-        self.DEPLOY = os.path.join(self.ROOT, 'deploy')
+        self.DEPLOY = os.path.join(self.ROOT, self.SETTINGS['deploy_dir'])
         if not os.path.exists(self.DEPLOY):
             os.mkdir(self.DEPLOY)
         # Copy media files to deploy destination
@@ -86,7 +88,6 @@ class Generator(object):
         self.POSTS = os.path.join(self.ROOT, 'posts')
         self.PAGES = os.path.join(self.ROOT, 'pages')
 
-        self.SETTINGS = self._get_settings()
         if self.SETTINGS['text_processor'] not in AVAILABLE_EXTENSIONS:
             ext = self.SETTINGS['text_processor']
             sys.stderr("WARNING: %s isn't a recognizeed text processor.\n"

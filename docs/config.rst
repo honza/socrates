@@ -113,3 +113,11 @@ you add in there will be made available in your templates' context.
 
     This functionality is provided by ``smartypants`` and ``typogrify`` and
     only works in Django at this time.
+
+.. option:: ligatures
+
+    Defaults to ``False``
+
+.. option:: deploy_dir
+
+    Defaults to ``deploy`` 
