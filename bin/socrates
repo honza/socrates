@@ -82,4 +82,6 @@ def main():
         else:
             sys.stderr.write("The '%s' directory doesn't exist.\n" % p)
 
-main()
+
+if __name__ == '__main__':
+    main()
