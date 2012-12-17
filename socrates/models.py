@@ -1,4 +1,5 @@
 import os
+import hashlib
 from datetime import datetime
 import yaml
 from processors import RstProcessor, MarkdownProcessor, TextileProcessor
@@ -39,6 +40,9 @@ class File(object):
 
         if self.context['ligatures']:
             self.contents = ligatures(self.contents)
+
+    def hash_file(self):
+        return hashlib.md5(open(self.path).read()).hexdigest()
 
     def _get_type(self):
         name, extension = os.path.splitext(self.path)

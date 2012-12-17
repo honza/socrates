@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import yaml
+import json
 from datetime import datetime
 
 from renderers import DjangoRenderer, Jinja2Renderer
@@ -39,6 +40,7 @@ DEFAULTS = {
 
 
 AVAILABLE_EXTENSIONS = ['markdown', 'rst', 'textile', 'html', 'extension']
+POST_CACHE_FILENAME = '.post-cache.json'
 
 
 class Generator(object):
@@ -102,6 +104,7 @@ class Generator(object):
         self.archives = {}
 
         self.load_posts()
+        self.cache_data = self.get_post_cache()
         self.process_posts()
 
         if os.path.exists(self.PAGES):
@@ -131,6 +134,7 @@ class Generator(object):
                 os.path.join(self.DEPLOY, 'media', 'pygments.css'),
                 css_content)
 
+        self.save_post_cache()
         self.log("Success!")
 
     def init_template_renderer(self):
@@ -246,6 +250,7 @@ class Generator(object):
         """
         self.log('Processing posts...')
         for post in self.posts:
+
             # Get categories
             self._get_post_cats(post)
 
@@ -281,6 +286,17 @@ class Generator(object):
     def save_posts(self):
         self.log('Saving posts...')
         for post in self.posts:
+            try:
+                old_hash = self.cache_data[post.path]
+            except KeyError:
+                old_hash = None
+
+            new_hash = post.hash_file()
+            self.cache_data[post.path] = new_hash
+
+            if old_hash == new_hash:
+                continue
+
             # Save the thing
             b = post.slug + '.html'
 
@@ -507,3 +523,14 @@ class Generator(object):
             contents = self.render(self.PAGED, self._v(v))
             c = os.path.join(e, "index.html")
             self._write_to_file(c, contents)
+
+    def get_post_cache(self):
+        if not os.path.exists(POST_CACHE_FILENAME):
+            return {}
+
+        return json.loads(open(POST_CACHE_FILENAME).read())
+
+    def save_post_cache(self):
+        self.log("Saving cache")
+        with open(POST_CACHE_FILENAME, 'w') as f:
+            f.write(json.dumps(self.cache_data, indent=4))
