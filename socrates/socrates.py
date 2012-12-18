@@ -1,6 +1,6 @@
 """
 Socrates - Static site generator
-(c) 2011 - Honza Pokorny
+(c) 2011-2012 - Honza Pokorny et al.
 http://github.com/honza/socrates
 BSD licensed
 """
