@@ -286,6 +286,9 @@ class Generator(object):
     def save_posts(self):
         self.log('Saving posts...')
         for post in self.posts:
+
+            # TODO: All of this caching needs to happen much sooner than here
+            # because the posts have already been parsed.
             try:
                 old_hash = self.cache_data[post.path]
             except KeyError:
