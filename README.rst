@@ -149,7 +149,8 @@ starting work to avoid wasting your time.
 Bugs & Issues
 -------------------------------------------------------------------------------
 
-Please report all bugs on Github.  `Mailing list`_.
+Please report all bugs on Github.  `Mailing list`_.  You can also come visit us
+in ``#socrates`` on freenode.
 
 Authors
 -------------------------------------------------------------------------------
