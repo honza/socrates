@@ -79,8 +79,10 @@ class Generator(object):
         self.SETTINGS = self._get_settings()
         # Set up deploy directory
         self.DEPLOY = os.path.join(self.ROOT, self.SETTINGS['deploy_dir'])
+        self.deploy_dir_created = False
         if not os.path.exists(self.DEPLOY):
             os.mkdir(self.DEPLOY)
+            self.deploy_dir_created = True
         # Copy media files to deploy destination
         if os.path.exists(os.path.join(self.DEPLOY, 'media')):
             shutil.rmtree(os.path.join(self.DEPLOY, 'media'))
@@ -528,7 +530,7 @@ class Generator(object):
             self._write_to_file(c, contents)
 
     def get_post_cache(self):
-        if not os.path.exists(POST_CACHE_FILENAME):
+        if not os.path.exists(POST_CACHE_FILENAME) or self.deploy_dir_created:
             return {}
 
         return json.loads(open(POST_CACHE_FILENAME).read())
