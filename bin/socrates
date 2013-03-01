@@ -45,7 +45,7 @@ def main():
                     os.path.join(temp_path, 'default'),
                     path)
         except OSError, e:
-            sys.stderr.write(e)
+            sys.stderr.write(str(e) + '\n')
 
     if options.generate:
         socrates.Generator(path, options.silent)
