@@ -205,9 +205,22 @@ class Post(File):
         else:
             self.author = self.config['author']
 
+        self.reading_time = self._get_reading_time()
+
     def _get_atom_date(self, date):
         d = date.strftime('%Y-%m-%dT%H:%M:%S%z')
         return d + "Z"
+
+    def _get_reading_time(self):
+        words = len(self.contents.split(' '))
+        reading_time = int(float(words) / 200.0)
+
+        if reading_time < 1:
+            return 'under one minute'
+        elif reading_time == 1:
+            return 'about one minute'
+        else:
+            return '%d minutes' % reading_time
 
 
 class Page(File):
