@@ -74,9 +74,9 @@ def caps(text):
     """
     text = force_unicode(text)
     try:
-        import smartypants
+        from . import smartypants
     except ImportError:
-        raise Exception, "Error in {% caps %} filter: The Python SmartyPants library isn't installed."
+        raise Exception("Error in {% caps %} filter: The Python SmartyPants library isn't installed.")
         
     tokens = smartypants._tokenize(text)
     result = []
@@ -168,9 +168,9 @@ def smartypants(text):
     """
     text = force_unicode(text)
     try:
-        import smartypants
+        from . import smartypants
     except ImportError:
-        raise Exception, "Error in {% smartypants %} filter: The Python smartypants library isn't installed."
+        raise Exception("Error in {% smartypants %} filter: The Python smartypants library isn't installed.")
     else:
         output = smartypants.smartyPants(text)
         return mark_safe(output)

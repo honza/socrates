@@ -11,10 +11,10 @@ import yaml
 import json
 from datetime import datetime
 
-from renderers import DjangoRenderer, Jinja2Renderer
-from models import Post, Page
-from utils import slugify
-from exceptions import ConfigurationError
+from .renderers import DjangoRenderer, Jinja2Renderer
+from .models import Post, Page
+from .utils import slugify
+from .exceptions import ConfigurationError
 
 
 DEFAULTS = {
@@ -165,7 +165,7 @@ class Generator(object):
         non-error output.
         """
         if not self.silent:
-            print text
+            print(text)
 
     def _get_page_str(self, current, total):
         """
@@ -265,7 +265,7 @@ class Generator(object):
             #   months
             m = date.strftime("%m")
             y = self.years[year]
-            if m not in y.keys():
+            if m not in list(y.keys()):
                 self.years[year][m] = []
 
             if self.SETTINGS['url_include_day']:
@@ -311,7 +311,7 @@ class Generator(object):
             else:
                 m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
-            if 'template' in post.config.keys():
+            if 'template' in list(post.config.keys()):
                 t = post.config['template']
             else:
                 t = self.SINGLE
@@ -331,7 +331,7 @@ class Generator(object):
 
             m = os.path.join(self.DEPLOY, b)
 
-            if 'template' in page.config.keys():
+            if 'template' in list(page.config.keys()):
                 t = page.config['template']
             else:
                 t = self.PAGE
@@ -362,7 +362,7 @@ class Generator(object):
                   30
         """
         self.log('Creating directories...')
-        keys = self.years.keys()
+        keys = list(self.years.keys())
         for k in keys:
             m = os.path.join(self.DEPLOY, k)
             if not os.path.exists(m):
@@ -444,7 +444,7 @@ class Generator(object):
         """
         Make category pages. They go into the 'category' directory.
         """
-        keys = self.categories.keys()
+        keys = list(self.categories.keys())
         if len(keys) != 0:
             # Make category dir
             self.CATEGORIES = os.path.join(self.DEPLOY, 'category')
@@ -465,7 +465,7 @@ class Generator(object):
         Make archive pages. Only by year.
         """
         self.log('Creating archives...')
-        keys = self.archives.keys()
+        keys = list(self.archives.keys())
         if len(keys) != 0:
             # Make category dir
             self.ARCHIVES = os.path.join(self.DEPLOY, 'archive')

@@ -2,10 +2,10 @@ import os
 import hashlib
 from datetime import datetime
 import yaml
-from processors import RstProcessor, MarkdownProcessor, TextileProcessor
-from utils import slugify, ligatures
-from exceptions import ConfigurationError
-from typography import typogrify
+from .processors import RstProcessor, MarkdownProcessor, TextileProcessor
+from .utils import slugify, ligatures
+from .exceptions import ConfigurationError
+from .typography import typogrify
 
 EXTENSIONS = {
     '.md': 'markdown',
