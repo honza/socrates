@@ -120,9 +120,9 @@ Or, ::
 for current directory.
 
 During development and/or composing a layout theme, it might be useful to always re-generate all posts, without caching.
-To do so, just delete the file ``.post-cache.json`` on your blog root folder.::
+To do so, you can run the following option: ::
 
-    $ rm .post-cache.json
+    $ socrates -c
 
 
 Documentation
