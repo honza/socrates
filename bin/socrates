@@ -5,6 +5,7 @@ import sys
 import shutil
 from optparse import OptionParser
 import socrates
+from socrates import socrates
 
 
 def main():
@@ -15,6 +16,9 @@ def main():
 
     parser.add_option('-g', '--generate', action='store_true',
         help="Generate a static site.")
+        
+    parser.add_option('-c', '--clear-cache', action='store_true',
+        help="Clear the static site post cache.")
 
     parser.add_option('-r', '--run', action='store_true',
             help="Run a simple server.")
@@ -47,8 +51,12 @@ def main():
         except OSError, e:
             sys.stderr.write(str(e) + '\n')
 
+    
     if options.generate:
         socrates.Generator(path, options.silent)
+        
+    if options.clear_cache:
+        os.remove(socrates.POST_CACHE_FILENAME)
 
     if options.run:
         import SimpleHTTPServer
