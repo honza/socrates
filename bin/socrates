@@ -56,7 +56,8 @@ def main():
         socrates.Generator(path, options.silent)
         
     if options.clear_cache:
-        os.remove(socrates.POST_CACHE_FILENAME)
+        if os.path.exists(socrates.POST_CACHE_FILENAME):
+            os.remove(socrates.POST_CACHE_FILENAME)
 
     if options.run:
         import SimpleHTTPServer
