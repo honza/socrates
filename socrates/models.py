@@ -133,6 +133,9 @@ class File(object):
             - textile
             - html
         """
+        
+        text = unicode(text, "utf-8")
+        
         p = self.file_type
         p = p.lower()
 
