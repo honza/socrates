@@ -119,6 +119,11 @@ Or, ::
 
 for current directory.
 
+During development and/or composing a layout theme, it might be useful to always re-generate all posts, without caching.
+To do so, you can run the following option: ::
+
+    $ socrates -c
+
 
 Documentation
 -------------------------------------------------------------------------------
