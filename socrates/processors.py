@@ -186,7 +186,7 @@ class MarkdownProcessor(Processor):
         self.md = Markdown(self.MisakaProcessor(), EXT_FENCED_CODE)
 
     def render(self, text):
-        return self.md.render(text)
+        return self.md(text)
 
 
 class TextileProcessor(Processor):
