@@ -197,6 +197,10 @@ class Post(File):
         categories = self.config.get('categories', ['Uncategorized'])
         self.categories = []
         for c in categories:
+
+            if not c:
+                continue
+
             v = {
                 'name': c,
                 'slug': slugify(c)

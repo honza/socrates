@@ -451,6 +451,8 @@ class Generator(object):
             if not os.path.exists(self.CATEGORIES):
                 os.mkdir(self.CATEGORIES)
             for k in keys:
+                if not k:
+                    continue
                 p = os.path.join(self.CATEGORIES, slugify(k))
                 if not os.path.exists(p):
                     os.mkdir(p)
