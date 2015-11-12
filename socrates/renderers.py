@@ -15,7 +15,7 @@ class DjangoRenderer(BaseRenderer):
 
         path = os.path.abspath(path)
         settings.configure(DEBUG=True, TEMPLATE_DEBUG=True,
-                TEMPLATE_DIRS=[path])
+                           TEMPLATE_DIRS=[path])
         self._render = render_to_string
 
     def render(self, template, values):

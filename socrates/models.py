@@ -133,9 +133,9 @@ class File(object):
             - textile
             - html
         """
-        
+
         text = unicode(text, "utf-8")
-        
+
         p = self.file_type
         p = p.lower()
 
@@ -190,7 +190,7 @@ class Post(File):
         if context['url_include_day']:
             url_template = '%s/' + url_template
             self.url = url_template % (self.year, self.month, self.day,
-                    self.slug,)
+                                       self.slug,)
         else:
             self.url = url_template % (self.year, self.month, self.slug,)
 

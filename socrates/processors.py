@@ -26,15 +26,20 @@ VARIANTS = {
     # 'linenos': HtmlFormatter(noclasses=INLINESTYLES, linenos=True),
 }
 
-def raw_html(name, args, options, content, lineno, contentOffset, blockText, state, stateMachine):
+
+def raw_html(name, args, options, content, lineno, contentOffset, blockText,
+             state, stateMachine):
     """
     Simply render the input html as html.
     """
     if content == "":
         return
     return [nodes.raw(text='\n'.join(content), format='html')]
+
+
 raw_html.content = True
 directives.register_directive('raw_html', raw_html)
+
 
 class Pygments(Directive):
     required_arguments = 1
@@ -97,7 +102,7 @@ class RstProcessor(object):
             pass
 
     def __init__(self, filename, global_settings, output='html',
-            header_level=2):
+                 header_level=2):
 
         self.settings = global_settings
         self.pygments_builder()
@@ -141,7 +146,7 @@ class RstProcessor(object):
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
                     value = self.render_node_to_html(self.pub.document,
-                            body_elem)
+                                                     body_elem)
                 else:
                     name = element.tagname
                     value = element.astext()
@@ -180,7 +185,8 @@ class MarkdownProcessor(Processor):
             return self.highlight_code(lang, text)
 
         def highlight_code(self, language, code):
-            return highlight(code, get_lexer_by_name(language), HtmlFormatter())
+            return highlight(code, get_lexer_by_name(language),
+                             HtmlFormatter())
 
     def __init__(self):
         self.md = Markdown(self.MisakaProcessor(), EXT_FENCED_CODE)

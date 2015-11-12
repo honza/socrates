@@ -4,7 +4,6 @@ import os
 import sys
 import shutil
 from optparse import OptionParser
-import socrates
 from socrates import socrates
 
 
@@ -12,19 +11,19 @@ def main():
     usage = "Usage: socrates.py [options] path"
     parser = OptionParser(usage=usage)
     parser.add_option('-i', '--init', action='store_true',
-        help="Create a new blog.")
+                      help="Create a new blog.")
 
     parser.add_option('-g', '--generate', action='store_true',
-        help="Generate a static site.")
-        
+                      help="Generate a static site.")
+
     parser.add_option('-c', '--clear-cache', action='store_true',
-        help="Clear the static site post cache.")
+                      help="Clear the static site post cache.")
 
     parser.add_option('-r', '--run', action='store_true',
-            help="Run a simple server.")
+                      help="Run a simple server.")
 
     parser.add_option('-s', '--silent', action='store_true',
-            help="Keep output to a minimum")
+                      help="Keep output to a minimum")
 
     options, args = parser.parse_args()
 
@@ -45,16 +44,13 @@ def main():
                 )
             ), 'themes')
         try:
-            shutil.copytree(
-                    os.path.join(temp_path, 'default'),
-                    path)
+            shutil.copytree(os.path.join(temp_path, 'default'), path)
         except OSError, e:
             sys.stderr.write(str(e) + '\n')
 
-    
     if options.generate:
         socrates.Generator(path, options.silent)
-        
+
     if options.clear_cache:
         if os.path.exists(socrates.POST_CACHE_FILENAME):
             os.remove(socrates.POST_CACHE_FILENAME)

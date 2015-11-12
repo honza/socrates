@@ -1,6 +1,6 @@
 """
 Socrates - Static site generator
-(c) 2011-2012 - Honza Pokorny et al.
+(c) 2011-2015 - Honza Pokorny et al.
 http://github.com/honza/socrates
 BSD licensed
 """
@@ -32,7 +32,7 @@ DEFAULTS = {
     'skip_categories': False,
     'inline_css': False,
     'pygments': {},
-    'sitemap_urls': ['about',],
+    'sitemap_urls': ['about'],
     'punctuation': False,
     'ligatures': False,
     'deploy_dir': 'deploy'
@@ -87,7 +87,7 @@ class Generator(object):
         if os.path.exists(os.path.join(self.DEPLOY, 'media')):
             shutil.rmtree(os.path.join(self.DEPLOY, 'media'))
         shutil.copytree(os.path.join(self.ROOT, 'layout', 'media'),
-                os.path.join(self.DEPLOY, 'media'))
+                        os.path.join(self.DEPLOY, 'media'))
 
         self.POSTS = os.path.join(self.ROOT, 'posts')
         self.PAGES = os.path.join(self.ROOT, 'pages')
@@ -95,7 +95,7 @@ class Generator(object):
         if self.SETTINGS['text_processor'] not in AVAILABLE_EXTENSIONS:
             ext = self.SETTINGS['text_processor']
             sys.stderr("WARNING: %s isn't a recognizeed text processor.\n"
-                    % ext)
+                       % ext)
             sys.exit(1)
         self.init_template_renderer()
 
@@ -227,7 +227,7 @@ class Generator(object):
                     self.posts.append(Post(p, self.SETTINGS))
                 except ConfigurationError:
                     sys.stderr.write("WARNING: %s isn't configured properly.\n"
-                            % filename)
+                                     % filename)
                     sys.exit(1)
         self.posts.reverse()
 
@@ -243,7 +243,7 @@ class Generator(object):
                     self.pages.append(Page(p, self.SETTINGS))
                 except ConfigurationError:
                     sys.stderr.write("WARNING: %s isn't configured properly.\n"
-                            % filename)
+                                     % filename)
                     sys.exit(1)
 
     def process_posts(self):
@@ -307,7 +307,7 @@ class Generator(object):
 
             if self.SETTINGS['url_include_day']:
                 m = os.path.join(self.DEPLOY, post.year, post.month,
-                        post.day, b)
+                                 post.day, b)
             else:
                 m = os.path.join(self.DEPLOY, post.year, post.month, b)
 
@@ -399,8 +399,8 @@ class Generator(object):
         else:
             posts = self.posts
             extra = False
-        contents = self.render(self.INDEX, self._v({'posts': posts, 'extra':
-            extra}))
+        contents = self.render(self.INDEX,
+                               self._v({'posts': posts, 'extra': extra}))
         self._write_to_file(m, contents)
 
     def make_sitemap(self):
@@ -413,7 +413,7 @@ class Generator(object):
             'posts': posts,
             'now': self._get_atom_date()}))
         self._write_to_file(m, contents)
-        
+
     def make_atom(self):
         """
         Create an atom feed
@@ -429,8 +429,9 @@ class Generator(object):
             posts = self.posts[:n]
         else:
             posts = self.posts
-        contents = self.render(self.ATOM, self._v({'posts': posts, 'now':
-            self._get_atom_date()}))
+        contents = self.render(self.ATOM,
+                               self._v({'posts': posts,
+                                        'now': self._get_atom_date()}))
 
         contents = contents.replace('&nbsp;', '')
         self._write_to_file(m, contents)
@@ -457,8 +458,8 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.categories[k]
-                contents = self.render(self.CATEGORY,
-                        self._v({'category': k, 'posts': posts}))
+                contents = self.render(
+                    self.CATEGORY, self._v({'category': k, 'posts': posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
@@ -478,8 +479,8 @@ class Generator(object):
                 if not os.path.exists(p):
                     os.mkdir(p)
                 posts = self.archives[k]
-                contents = self.render(self.ARCHIVE,
-                        self._v({'year': k, 'posts': posts}))
+                contents = self.render(
+                    self.ARCHIVE, self._v({'year': k, 'posts': posts}))
                 m = os.path.join(p, 'index.html')
                 self._write_to_file(m, contents)
 
