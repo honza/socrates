@@ -5,7 +5,7 @@ long_desc = open('README.rst').read()
 
 setup(
     name='socrates',
-    version='0.9.1',
+    version='0.9.2',
     url='http://honza.github.com/socrates/',
     install_requires=[
         'PyYAML==3.11',

@@ -134,7 +134,7 @@ class File(object):
             - html
         """
 
-        text = unicode(text, "utf-8")
+        text = str(text, "utf-8")
 
         p = self.file_type
         p = p.lower()
