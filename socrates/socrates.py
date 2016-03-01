@@ -229,6 +229,11 @@ class Generator(object):
                     sys.stderr.write("WARNING: %s isn't configured properly.\n"
                                      % filename)
                     sys.exit(1)
+                except:
+                    sys.stderr.write("ERROR: couldn't parse %s.\n"
+                                     % filename)
+                    sys.exit(1)
+
         self.posts.reverse()
 
     def load_pages(self):
