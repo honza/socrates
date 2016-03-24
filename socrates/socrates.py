@@ -220,7 +220,10 @@ class Generator(object):
         Get all files from the posts directory, create Post instances and add
         them to the self.posts list.
         """
-        for filename in os.listdir(self.POSTS):
+        filenames = os.listdir(self.POSTS)
+        filenames.sort()
+
+        for filename in filenames:
             if not filename.startswith('.') and not filename.startswith('_'):
                 p = os.path.join(self.POSTS, filename)
                 try:
