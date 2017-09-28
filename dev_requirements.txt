@@ -6,3 +6,5 @@ sphinx
 pygments
 markdown
 textile
+tox
+flake8

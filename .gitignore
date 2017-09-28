@@ -7,3 +7,4 @@ socrates.egg-info/
 .hg/
 .hgignore
 docs/_build/
+.tox
